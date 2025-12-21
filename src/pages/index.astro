@@ -7,6 +7,28 @@ import SidebarComponents from '../components/SidebarComponents.astro';
 import RightSidebar from '../components/RightSidebar.astro';
 import { blogPosts } from '../data/blogPosts';
 
+// 每日随机寄语数组
+const dailyMessages = [
+  "生活就像海洋，只有意志坚强的人才能到达彼岸。",
+  "今天的努力，是明天的底气。",
+  "每一个不曾起舞的日子，都是对生命的辜负。",
+  "保持热爱，奔赴山海。",
+  "永恒瞬间，不费青春，人生苦短，不留遗憾！",
+  "成功不是终点，失败也并非末日：这只是继续前行的勇气。",
+  "人生没有白走的路，每一步都算数。",
+  "与其抱怨，不如改变。",
+  "未来可期，人间值得。",
+  "努力到无能为力，拼搏到感动自己。",
+  "种一棵树最好的时间是十年前，其次是现在。",
+  "生活总会给你答案，但不会马上把一切都告诉你。",
+  "每一次挫折，都是成长的契机。",
+  "简单生活，不简单过。",
+  "你若盛开，清风自来。"
+];
+
+// 随机选择一条寄语
+const randomMessage = dailyMessages[Math.floor(Math.random() * dailyMessages.length)];
+
 // 博客统计数据
 const blogStats = [
   { title: "文章", value: 0, icon: "article", color: "rgba(103, 80, 164, 0.8)" },
@@ -41,7 +63,7 @@ blogStats.forEach(stat => {
   
   <!-- 中间内容区 -->
   <Hero 
-    title="永恒瞬间，不费青春，人生苦短，不留遗憾！"
+    title={randomMessage}
     subtitle="Move on, walk alone. Nothing lasts. Life is short ——no regrets."
   />
 
