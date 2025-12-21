@@ -1,0 +1,137 @@
+---
+import MainLayout from '../layouts/MainLayout.astro';
+
+const title = '友情链接';
+const description = 'XingGreen Blog的友情链接';
+
+// 友链数据
+const friends = [
+  {
+    name: 'vahiru的博客',
+    url: 'https://vahiru.is-cute.cat',
+    description: '这是vahiru的博客',
+    avatar: 'https://via.placeholder.com/80'
+  },
+];
+---
+
+<MainLayout title={title} description={description}>
+  <section class="friends">
+    <div class="container">
+      <h2 class="section-title">友情链接</h2>
+      <p class="section-description"></p>
+      
+      <div class="friends-grid">
+        {friends.map((friend, index) => (
+          <a href={friend.url} target="_blank" rel="noopener noreferrer" class="friend-card" key={index}>
+            <div class="friend-content">
+              <div class="friend-avatar">
+                <img src={friend.avatar} alt={friend.name}>
+              </div>
+              <div class="friend-info">
+                <h3 class="friend-name">{friend.name}</h3>
+                <p class="friend-description">{friend.description}</p>
+                <p class="friend-url">{friend.url}</p>
+              </div>
+            </div>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+</MainLayout>
+
+<style>
+.friends {
+  padding: 2rem 0;
+  min-height: 100vh;
+}
+
+.section-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  text-align: center;
+  color: var(--md3-on-surface);
+}
+
+.section-description {
+  font-size: 1.125rem;
+  color: var(--md3-on-surface-variant);
+  text-align: center;
+  margin-bottom: 3rem;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.friends-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+.friend-card {
+  background: var(--md3-surface-container-low);
+  border-radius: 12px;
+  padding: 1.5rem;
+  text-decoration: none;
+  color: var(--md3-on-surface);
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 6px var(--md3-shadow-sm);
+}
+
+.friend-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 15px var(--md3-shadow-md);
+}
+
+.friend-content {
+  display: flex;
+  align-items: center;
+}
+
+.friend-avatar {
+  margin-right: 1rem;
+  flex-shrink: 0;
+}
+
+.friend-avatar img {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--md3-primary);
+}
+
+.friend-info {
+  flex: 1;
+}
+
+.friend-name {
+  font-size: 1.25rem;
+  margin-bottom: 0.25rem;
+  font-weight: 600;
+  color: var(--md3-on-surface);
+}
+
+.friend-description {
+  font-size: 0.875rem;
+  color: var(--md3-on-surface-variant);
+  margin-bottom: 0.5rem;
+  line-height: 1.4;
+}
+
+.friend-url {
+  font-size: 0.875rem;
+  color: var(--md3-primary);
+  font-family: monospace;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .friends-grid {
+    grid-template-columns: 1fr;
+  }
+}
+</style>

@@ -1,0 +1,80 @@
+# Blog Configuration
+# ==================
+
+# 基本信息
+[blog]
+name = "XingGreen Blog"
+description = "永恒瞬间，不费青春，人生苦短，不留遗憾！"
+author = "XingGreen"
+
+# 主题设置
+[theme]
+# 可用主题: light, dark, auto
+default = "auto"
+# 主色调
+primary = "#ffb7c5"  # Sakura pink
+secondary = "#85d4ff"  # Glass-cyan
+accent = "#98fb98"  # Mint green
+
+# 搜索设置
+[search]
+enabled = true
+# 搜索深度
+max_results = 10
+
+# 评论系统
+[comment]
+enabled = false
+# Waline 配置
+[comment.waline]
+server_url = "#"  # 需要替换为实际的 Waline 服务端地址
+placeholder = "来说点什么吧...喵～"
+
+# 视觉效果
+[visual]
+# 背景设置
+[visual.background]
+type = "image"
+# 背景图片路径（相对于public目录）
+image_url = "/background.jpg"
+
+# 卡片设置
+[visual.card]
+# 40% 透明毛玻璃效果
+transparency = 0.4
+radius = 8  # 8px 圆角
+
+# 轮播插画
+[visual.carousel]
+enabled = false
+interval = 5000  # 5秒切换一次
+# 插画列表（需要替换为实际图片URL）
+images = [
+  "#",
+  "#",
+  "#"
+]
+
+# 移动端设置
+[mobile]
+# 猫耳朵侧边抽屉
+[mobile.drawer]
+enabled = true
+
+# 附加功能
+[features]
+# 轻音 rain 效果
+rain_sound = true
+# 滚动淡入效果
+scroll_fade = true
+# 雪花粒子效果
+snow_particles = false
+
+# 排版设置
+[typography]
+# Markdown 正文区最大宽度
+content_width = "65ch"
+# 字号
+font_size = 15
+# 行高
+line_height = 1.75

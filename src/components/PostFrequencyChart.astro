@@ -1,0 +1,248 @@
+---
+import type { BlogPost } from '../data/blogPosts';
+
+interface Props {
+  posts: BlogPost[];
+  title?: string;
+}
+
+const { 
+  posts,
+  title = '文章发布频率' 
+} = Astro.props;
+
+// 统计每月文章数量
+const monthlyPosts = posts.reduce((acc, post) => {
+  const month = post.date.substring(0, 7); // YYYY-MM
+  acc[month] = (acc[month] || 0) + 1;
+  return acc;
+}, {} as Record<string, number>);
+
+// 转换为数组并按月份排序
+const sortedMonths = Object.entries(monthlyPosts)
+  .sort((a, b) => a[0].localeCompare(b[0]));
+
+// 获取最大文章数量
+const maxPosts = Math.max(...sortedMonths.map(([_, count]) => count), 1);
+---
+
+<div class="post-frequency-chart">
+  <h3 class="chart-title">{title}</h3>
+  <div class="chart-container">
+    <canvas 
+      id="frequencyChart" 
+      width="800" 
+      height="200"
+      aria-label="文章发布频率图表"
+    ></canvas>
+  </div>
+  <div class="chart-legend">
+    <span>横轴：月份</span>
+    <span>纵轴：文章数量</span>
+  </div>
+</div>
+
+<script define:vars={{ sortedMonths, maxPosts }}>
+  document.addEventListener('DOMContentLoaded', () => {
+    const canvas = document.getElementById('frequencyChart');
+    if (!canvas) return;
+    
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+    
+    // 获取数据
+    const months = sortedMonths.map(item => item[0]);
+    const counts = sortedMonths.map(item => item[1]);
+    
+    // 画布尺寸
+    const width = canvas.width;
+    const height = canvas.height;
+    
+    // 清除画布
+    ctx.clearRect(0, 0, width, height);
+    
+    // 计算边距
+    const padding = 40;
+    const chartWidth = width - padding * 2;
+    const chartHeight = height - padding * 2;
+    
+    // 计算柱状图参数
+    const barWidth = chartWidth / months.length * 0.6;
+    const barGap = chartWidth / months.length * 0.4;
+    
+    // 绘制坐标轴
+    ctx.strokeStyle = 'var(--border-color)';
+    ctx.lineWidth = 2;
+    
+    // X轴
+    ctx.beginPath();
+    ctx.moveTo(padding, height - padding);
+    ctx.lineTo(width - padding, height - padding);
+    ctx.stroke();
+    
+    // Y轴
+    ctx.beginPath();
+    ctx.moveTo(padding, padding);
+    ctx.lineTo(padding, height - padding);
+    ctx.stroke();
+    
+    // 获取CSS变量的实际值
+    const accentColor = getComputedStyle(document.documentElement).getPropertyValue('--accent-color').trim();
+    const shadowColor = getComputedStyle(document.documentElement).getPropertyValue('--shadow').trim();
+    const textPrimary = getComputedStyle(document.documentElement).getPropertyValue('--text-primary').trim();
+    const textSecondary = getComputedStyle(document.documentElement).getPropertyValue('--text-secondary').trim();
+    
+    // 绘制Y轴刻度和标签
+    const yTicks = 5;
+    for (let i = 0; i <= yTicks; i++) {
+      const y = padding + (chartHeight / yTicks) * i;
+      const value = Math.round(maxPosts - (maxPosts / yTicks) * i);
+      
+      // 刻度线
+      ctx.beginPath();
+      ctx.moveTo(padding - 5, y);
+      ctx.lineTo(padding, y);
+      ctx.stroke();
+      
+      // 标签
+      ctx.fillStyle = textSecondary;
+      ctx.font = '12px sans-serif';
+      ctx.textAlign = 'right';
+      ctx.fillText(value.toString(), padding - 10, y + 4);
+    }
+    
+    // 绘制柱状图
+    months.forEach((month, index) => {
+      const count = counts[index];
+      const x = padding + (barWidth + barGap) * index + barGap / 2;
+      const barHeight = (count / maxPosts) * chartHeight;
+      const y = height - padding - barHeight;
+      
+      // 绘制柱子
+      const gradient = ctx.createLinearGradient(x, y, x, height - padding);
+      gradient.addColorStop(0, accentColor);
+      gradient.addColorStop(1, 'rgba(152, 251, 152, 0.5)');
+      
+      ctx.fillStyle = gradient;
+      ctx.fillRect(x, y, barWidth, barHeight);
+      
+      // 添加阴影
+      ctx.shadowColor = shadowColor;
+      ctx.shadowBlur = 5;
+      ctx.shadowOffsetX = 2;
+      ctx.shadowOffsetY = 2;
+      ctx.fillRect(x, y, barWidth, barHeight);
+      ctx.shadowBlur = 0;
+      ctx.shadowOffsetX = 0;
+      ctx.shadowOffsetY = 0;
+      
+      // 顶部数字
+      ctx.fillStyle = textPrimary;
+      ctx.font = 'bold 14px sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText(count.toString(), x + barWidth / 2, y - 10);
+      
+      // 月份标签
+      ctx.fillStyle = textSecondary;
+      ctx.font = '12px sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText(month.replace('-', '/'), x + barWidth / 2, height - padding + 20);
+    });
+    
+    // 动态效果：柱子从底部生长
+    const animateBars = () => {
+      let progress = 0;
+      const duration = 1000;
+      const startTime = performance.now();
+      
+      const animate = (currentTime) => {
+        const elapsed = currentTime - startTime;
+        progress = Math.min(elapsed / duration, 1);
+        
+        // 清除图表区域
+        ctx.clearRect(padding, padding, chartWidth, chartHeight);
+        
+        // 获取CSS变量的实际值
+        const accentColor = getComputedStyle(document.documentElement).getPropertyValue('--accent-color').trim();
+        const shadowColor = getComputedStyle(document.documentElement).getPropertyValue('--shadow').trim();
+        
+        months.forEach((_, index) => {
+          const count = counts[index];
+          const x = padding + (barWidth + barGap) * index + barGap / 2;
+          const currentHeight = (count / maxPosts) * chartHeight * progress;
+          const y = height - padding - currentHeight;
+          
+          // 重绘柱子
+          const gradient = ctx.createLinearGradient(x, y, x, height - padding);
+          gradient.addColorStop(0, accentColor);
+          gradient.addColorStop(1, 'rgba(152, 251, 152, 0.5)');
+          
+          ctx.fillStyle = gradient;
+          ctx.fillRect(x, y, barWidth, currentHeight);
+          
+          // 添加阴影
+          ctx.shadowColor = shadowColor;
+          ctx.shadowBlur = 5;
+          ctx.shadowOffsetX = 2;
+          ctx.shadowOffsetY = 2;
+          ctx.fillRect(x, y, barWidth, currentHeight);
+          ctx.shadowBlur = 0;
+          ctx.shadowOffsetX = 0;
+          ctx.shadowOffsetY = 0;
+        });
+        
+        if (progress < 1) {
+          requestAnimationFrame(animate);
+        }
+      };
+      
+      requestAnimationFrame(animate);
+    };
+    
+    // 延迟执行动画
+    setTimeout(animateBars, 300);
+  });
+</script>
+
+<style>
+.post-frequency-chart {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 4px 6px var(--shadow);
+}
+
+.chart-title {
+  font-size: 1.3rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: var(--text-primary);
+}
+
+.chart-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow-x: auto;
+  padding: 1rem 0;
+}
+
+#frequencyChart {
+  width: 100%;
+  max-width: 800px;
+  height: auto;
+}
+
+.chart-legend {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border-color);
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+</style>

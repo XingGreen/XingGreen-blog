@@ -1,0 +1,40 @@
+---
+interface Props {
+  title: string;
+  subtitle?: string;
+}
+
+const { title, subtitle } = Astro.props;
+---
+
+<section class="hero" aria-labelledby="hero-title">
+  <div class="hero-overlay"></div>
+  
+  <div class="hero-content">
+    <h1 id="hero-title">
+      {title}
+    </h1>
+    
+    {subtitle && (
+      <p>
+        {subtitle}
+      </p>
+    )}
+    
+    <div class="hero-buttons">
+      <a href="/blog" class="btn btn-primary" aria-label="浏览博客文章">
+        <span class="material-symbols-outlined" aria-hidden="true">article</span>
+        浏览文章
+      </a>
+      <a href="/friends" class="btn btn-secondary" aria-label="查看友情链接">
+        <span class="material-symbols-outlined" aria-hidden="true">people</span>
+        友情链接
+      </a>
+    </div>
+  </div>
+  
+  <!-- 装饰元素 -->
+  <div class="hero-decor hero-decor-1"></div>
+  <div class="hero-decor hero-decor-2"></div>
+  <div class="hero-decor hero-decor-3"></div>
+</section>

@@ -1,0 +1,63 @@
+---
+interface Props {
+  title: string;
+  excerpt: string;
+  date: string;
+  category: string;
+  tags: string[];
+  author: string;
+  slug: string;
+}
+
+const { title, excerpt, date, category, tags, author, slug } = Astro.props;
+
+// 格式化日期
+const formattedDate = new Date(date).toLocaleDateString('zh-CN', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric'
+});
+---
+
+<div class="card glass blog-card">
+  <div class="card-content">
+    <div class="card-meta">
+      <div class="card-category">
+        <span class="material-symbols-outlined" aria-hidden="true">category</span>
+        <span>{category}</span>
+      </div>
+      <div class="card-date">
+        <span class="material-symbols-outlined" aria-hidden="true">calendar_today</span>
+        <span>{formattedDate}</span>
+      </div>
+    </div>
+    
+    <h3 class="card-title">
+      <a href={`/blog/${slug}`} aria-label={`阅读文章：${title}`}>
+        {title}
+      </a>
+    </h3>
+    
+    <p class="card-excerpt">
+      {excerpt}
+    </p>
+    
+    <div class="card-footer">
+      <div class="card-author">
+        <span class="material-symbols-outlined" aria-hidden="true">person</span>
+        <span>{author}</span>
+      </div>
+      
+      <div class="card-tags">
+        {tags.map((tag) => (
+          <a 
+            href={`/tags/${tag.toLowerCase()}`} 
+            class="tag"
+            aria-label={`查看标签：${tag} 的文章`}>
+            {tag}
+          </a>
+        ))}
+      </div>
+    </div>
+  </div>
+</div>

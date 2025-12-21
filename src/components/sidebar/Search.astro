@@ -1,0 +1,277 @@
+---
+import { featureConfig } from '../../config';
+
+interface Props {
+  config: {
+    placeholder?: string;
+  };
+}
+
+const { config } = Astro.props;
+const defaultConfig = {
+  placeholder: '搜索文章...',
+  ...config,
+};
+
+// 检查搜索功能是否启用
+const isSearchEnabled = featureConfig.search.enabled;
+---
+
+{isSearchEnabled && (
+  <div class="search-card glass">
+    <h3 class="card-title">搜索</h3>
+    <div class="search-container">
+      <input
+        type="text"
+        class="search-input"
+        placeholder={defaultConfig.placeholder}
+        aria-label="搜索文章"
+        id="search-input"
+      />
+      <button class="search-btn" aria-label="执行搜索">
+        <span class="material-symbols-outlined">search</span>
+      </button>
+    </div>
+    <div class="search-results" id="search-results" aria-live="polite"></div>
+  </div>
+
+  <script>
+    // 确保DOM加载完成后执行JavaScript代码
+    document.addEventListener('DOMContentLoaded', () => {
+      // 定义博客文章类型
+      interface BlogPost {
+        title: string;
+        excerpt: string;
+        date: string;
+        category: string;
+        tags: string[];
+        author: string;
+        slug: string;
+      }
+
+      // 扩展Window接口
+      declare global {
+        interface Window {
+          blogPosts?: BlogPost[];
+        }
+      }
+
+      // 搜索配置
+      const searchConfig = {
+        keys: ['title', 'excerpt', 'tags', 'category'],
+        threshold: 0.3,
+        includeMatches: true,
+        minMatchCharLength: 2
+      };
+
+      // 获取搜索元素
+      const searchInput = document.getElementById('search-input');
+      const searchBtn = document.querySelector('.search-btn');
+      const searchResults = document.getElementById('search-results');
+
+      // 搜索功能
+      const performSearch = (query: string, posts: BlogPost[]) => {
+        if (!query.trim() || !searchResults) {
+          searchResults?.classList.remove('active');
+          return;
+        }
+        
+        // 简单的搜索实现，实际项目中可以使用更复杂的搜索算法
+        const results = posts.filter(post => {
+          const searchText = `${post.title} ${post.excerpt} ${post.category} ${post.tags.join(' ')}`;
+          return searchText.toLowerCase().includes(query.toLowerCase());
+        });
+        
+        renderSearchResults(results);
+      };
+
+      // 渲染搜索结果
+      const renderSearchResults = (results: BlogPost[]) => {
+        if (!searchResults) return;
+        
+        if (results.length === 0) {
+          searchResults.innerHTML = `
+            <div class="search-result-item">
+              <div class="search-result-title">未找到相关文章</div>
+              <div class="search-result-excerpt">请尝试其他搜索关键词</div>
+            </div>
+          `;
+          searchResults.classList.add('active');
+          return;
+        }
+        
+        const resultsHTML = results.map(result => {
+          return `
+            <div class="search-result-item" data-slug="${result.slug}">
+              <div class="search-result-title">${result.title}</div>
+              <div class="search-result-excerpt">${result.excerpt}</div>
+              <div class="search-result-meta">
+                <span class="search-result-category">${result.category}</span>
+                <span class="search-result-date">${result.date}</span>
+              </div>
+            </div>
+          `;
+        }).join('');
+        
+        searchResults.innerHTML = resultsHTML;
+        searchResults.classList.add('active');
+        
+        // 添加结果点击事件
+        const resultItems = searchResults.querySelectorAll('.search-result-item');
+        resultItems.forEach(item => {
+          item.addEventListener('click', () => {
+            const slug = (item as HTMLElement).dataset.slug;
+            if (slug) {
+              window.location.href = `/blog/${slug}`;
+            }
+          });
+        });
+      };
+
+      // 监听搜索输入
+      if (searchInput && searchResults) {
+        // 获取博客文章数据
+        let blogPosts: BlogPost[] = [];
+        
+        // 从全局变量获取文章数据（需要在页面中定义）
+        if (window.blogPosts) {
+          blogPosts = window.blogPosts;
+        }
+        
+        // 监听输入事件
+        let searchTimeout: NodeJS.Timeout | null = null;
+        searchInput.addEventListener('input', (e: Event) => {
+          if (searchTimeout) {
+            clearTimeout(searchTimeout);
+          }
+          const query = (e.target as HTMLInputElement).value;
+          
+          searchTimeout = setTimeout(() => {
+            performSearch(query, blogPosts);
+          }, 300);
+        });
+        
+        // 监听搜索按钮点击
+        searchBtn?.addEventListener('click', () => {
+          const query = searchInput.value;
+          performSearch(query, blogPosts);
+        });
+        
+        // 点击外部关闭搜索结果
+        document.addEventListener('click', (e) => {
+          const target = e.target as HTMLElement;
+          if (!target.closest('.search-card')) {
+            searchResults.classList.remove('active');
+          }
+        });
+        
+        // 按ESC键关闭搜索结果
+        document.addEventListener('keydown', (e) => {
+          if (e.key === 'Escape') {
+            searchResults.classList.remove('active');
+          }
+        });
+      }
+    });
+  </script>
+)}
+
+<style scoped>
+.search-card {
+  padding: 1.5rem;
+}
+
+.card-title {
+  font-size: 1.25rem;
+  margin: 0 0 1rem 0;
+  color: var(--md3-on-surface);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.search-container {
+  display: flex;
+  gap: 0.5rem;
+  position: relative;
+}
+
+.search-input {
+  flex: 1;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--md3-outline);
+  border-radius: 8px;
+  background-color: var(--md3-surface-container-highest);
+  color: var(--md3-on-surface);
+  font-size: 0.9375rem;
+  transition: all 0.2s ease;
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: var(--md3-primary);
+  background-color: var(--md3-surface-container);
+  box-shadow: 0 0 0 3px var(--md3-primary-container);
+}
+
+.search-input::placeholder {
+  color: var(--md3-on-surface-variant);
+}
+
+.search-btn {
+  width: 40px;
+  height: 40px;
+  border: none;
+  border-radius: 8px;
+  background-color: var(--md3-primary);
+  color: var(--md3-on-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.search-btn:hover {
+  background-color: var(--md3-primary-container);
+  color: var(--md3-on-primary-container);
+  transform: translateY(-1px);
+}
+
+.search-btn:active {
+  transform: translateY(0);
+}
+
+.search-btn .material-symbols-outlined {
+  font-size: 1.25rem;
+}
+
+.search-results {
+  margin-top: 1rem;
+  max-height: 300px;
+  overflow-y: auto;
+  display: none;
+}
+
+.search-results.active {
+  display: block;
+}
+
+.search-results::-webkit-scrollbar {
+  width: 4px;
+}
+
+.search-results::-webkit-scrollbar-track {
+  background: var(--glass-bg);
+  border-radius: 2px;
+}
+
+.search-results::-webkit-scrollbar-thumb {
+  background: var(--md3-border-color);
+  border-radius: 2px;
+}
+
+.search-results::-webkit-scrollbar-thumb:hover {
+  background: var(--md3-primary);
+}
+</style>

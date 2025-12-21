@@ -1,0 +1,403 @@
+---
+import '../assets/styles/global.css';
+import Sidebar from '../components/Sidebar.astro';
+import AuthorProfile from '../components/AuthorProfile.astro';
+import SidebarComponents from '../components/SidebarComponents.astro';
+import RightSidebar from '../components/RightSidebar.astro';
+import { layoutConfig } from '../config';
+import { blogPosts } from '../data/blogPosts';
+
+// 博客统计数据
+const blogStats = [
+  { title: "文章", value: 0, icon: "article", color: "rgba(103, 80, 164, 0.8)" },
+  { title: "分类", value: 0, icon: "category", color: "rgba(98, 91, 113, 0.8)" },
+  { title: "标签", value: 0, icon: "label", color: "rgba(125, 82, 96, 0.8)" },
+  { title: "总字数", value: 0, icon: "text_fields", color: "rgba(40, 205, 197, 0.8)" }
+];
+
+// 计算统计数据
+blogStats.forEach(stat => {
+  if (stat.title === "文章") {
+    stat.value = blogPosts.length;
+  } else if (stat.title === "分类") {
+    stat.value = [...new Set(blogPosts.map(post => post.category))].length;
+  } else if (stat.title === "标签") {
+    stat.value = [...new Set(blogPosts.flatMap(post => post.tags))].length;
+  } else if (stat.title === "总字数") {
+    stat.value = blogPosts.reduce((acc, post) => acc + post.excerpt.length, 0);
+  }
+});
+
+interface Props {
+  title?: string;
+  description?: string;
+  class?: string;
+}
+
+const {
+  title = 'XingGreen Blog',
+  description = 'A beautiful Astro blog with Material Design 3 and anime background',
+  class: bodyClass = ''
+} = Astro.props;
+
+// 从配置获取侧边栏位置
+const sidebarPosition = layoutConfig.sidebarPosition;
+const isLeftSidebar = sidebarPosition === 'left';
+---
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content={description} />
+  <title>{title}</title>
+  <!-- 字体加载优化：系统字体优先，web字体作为备选 -->
+  <!-- 方案2: 轻量级web字体备选方案（仅在系统字体不可用时加载） -->
+  <link 
+    rel="preload" 
+    href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;600;700&display=swap&subset=chinese-simplified,latin" 
+    as="style" 
+    onload="this.onload=null;this.rel='stylesheet'" 
+  >
+  <noscript>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;600;700&display=swap&subset=chinese-simplified,latin" rel="stylesheet">
+  </noscript>
+  <!-- 方案3: 更圆润的开源字体备选方案 -->
+  <link 
+    rel="preload" 
+    href="https://fonts.googleapis.com/css2?family=ZCOOL+XiaoWei:wght@400;700&display=swap" 
+    as="style" 
+    onload="this.onload=null;this.rel='stylesheet'" 
+  >
+  <noscript>
+    <link href="https://fonts.googleapis.com/css2?family=ZCOOL+XiaoWei:wght@400;700&display=swap" rel="stylesheet">
+  </noscript>
+  <!-- Material Symbols -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+</head>
+<body class={bodyClass}>
+  <!-- 几何装饰元素 -->
+  <div class="geometric-shape circle" style="top: 10%; left: 5%;" aria-hidden="true"></div>
+  <div class="geometric-shape square" style="top: 50%; right: 8%;" aria-hidden="true"></div>
+  <div class="geometric-shape triangle" style="bottom: 15%; left: 10%;" aria-hidden="true"></div>
+  <div class="geometric-shape circle" style="bottom: 20%; right: 15%;" aria-hidden="true"></div>
+  <div class="geometric-shape square" style="top: 25%; left: 25%;" aria-hidden="true"></div>
+
+  <!-- 导航栏 -->
+  <nav class="glass" role="navigation" aria-label="主要导航">
+    <div class="container">
+      <div class="nav-content">
+        <div class="nav-logo" role="log">
+          <span class="material-symbols-outlined" aria-hidden="true">JLYG</span>
+          <h1>{title}</h1>
+        </div>
+        
+
+        
+        <!-- 桌面导航菜单 -->
+        <ul class="nav-menu">
+          <li><a href="/" aria-label="前往主页">主页</a></li>
+          <li><a href="/blog" aria-label="查看文章归档">归档</a></li>
+          <li><a href="/friends" aria-label="查看友情链接">友链</a></li>
+          <li><a href="/contact" aria-label="联系博客作者">联系我</a></li>
+        </ul>
+        
+        <!-- 导航功能按钮容器 -->
+        <div class="nav-actions">
+
+          
+          <!-- 主题切换按钮 -->
+          <button class="theme-toggle-btn" aria-label="切换主题">
+            <span class="material-symbols-outlined" aria-hidden="true">light_mode</span>
+          </button>
+          
+          <!-- 移动端菜单按钮 -->
+          <button class="mobile-menu-btn" aria-expanded="false" aria-controls="mobile-nav-menu" aria-label="打开菜单">
+            <span class="material-symbols-outlined" aria-hidden="true">menu</span>
+          </button>
+        </div>
+      </div>
+    </div>
+    
+    <!-- 移动端导航菜单 -->
+    <div class="mobile-nav-menu" id="mobile-nav-menu">
+      <div class="mobile-nav-header">
+        <div class="nav-logo">
+          <span class="material-symbols-outlined" aria-hidden="true">sparkles</span>
+          <h1>{title}</h1>
+        </div>
+        <button class="mobile-close-btn" aria-label="关闭菜单">
+          <span class="material-symbols-outlined" aria-hidden="true">close</span>
+        </button>
+      </div>
+      
+
+      
+      <ul class="mobile-nav-items">
+        <li><a href="/" aria-label="前往主页">主页</a></li>
+        <li><a href="/blog" aria-label="查看文章归档">归档</a></li>
+        <li><a href="/friends" aria-label="查看友情链接">友链</a></li>
+        <li><a href="/contact" aria-label="联系博客作者">联系我</a></li>
+      </ul>
+    </div>
+  </nav>
+  
+  <!-- 主内容区域 -->
+  <main class="three-column-layout">
+    <div class="layout-container">
+      <!-- 根据配置动态调整侧边栏位置 -->
+      {isLeftSidebar ? (
+        <>
+          <!-- 左侧边栏 - 支持自定义内容 -->
+          <slot name="left-sidebar">
+            <aside class="left-sidebar">
+              <AuthorProfile 
+                name="XingGreen" 
+                quote="人生如梦，不期而遇" 
+              />
+              <SidebarComponents posts={blogPosts} />
+            </aside>
+          </slot>
+          
+          <!-- 中间内容区 -->
+          <section class="main-content">
+            <slot />
+          </section>
+          
+          <!-- 右侧边栏 - 支持自定义内容 -->
+          <slot name="right-sidebar">
+            <aside class="right-sidebar">
+              <RightSidebar />
+            </aside>
+          </slot>
+        </>
+      ) : (
+        <>
+          <!-- 右侧边栏 - 支持自定义内容 -->
+          <slot name="right-sidebar">
+            <aside class="right-sidebar">
+              <RightSidebar />
+            </aside>
+          </slot>
+          
+          <!-- 中间内容区 -->
+          <section class="main-content">
+            <slot />
+          </section>
+          
+          <!-- 左侧边栏 - 支持自定义内容 -->
+          <slot name="left-sidebar">
+            <aside class="left-sidebar">
+              <AuthorProfile 
+                name="XingGreen" 
+                quote="人生如梦，不期而遇" 
+              />
+              <SidebarComponents posts={blogPosts} />
+            </aside>
+          </slot>
+        </>
+      )}
+    </div>
+  </main>
+
+
+
+  <!-- 页脚 -->
+  <footer class="glass">
+      <div class="footer-bottom">
+        <h3>{title}</h3>
+        <p>
+          &copy; 2025-{new Date().getFullYear()} {title}. 使用 Astro 和 Material Design 3 构建
+        </p>
+      </div>
+  </footer>
+  
+
+
+  <script>
+    // 确保DOM加载完成后执行JavaScript代码
+    document.addEventListener('DOMContentLoaded', () => {
+      // 主题切换功能
+      const themeToggleBtn = document.querySelector('.theme-toggle-btn');
+      const initialTheme = localStorage.getItem('theme') || 'light';
+      document.documentElement.setAttribute('data-theme', initialTheme);
+      
+      if (initialTheme === 'dark') {
+        themeToggleBtn?.querySelector('.material-symbols-outlined')?.setAttribute('textContent', 'dark_mode');
+      }
+      
+      themeToggleBtn?.addEventListener('click', () => {
+        const currentTheme = document.documentElement.getAttribute('data-theme');
+        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+        
+        document.documentElement.setAttribute('data-theme', newTheme);
+        localStorage.setItem('theme', newTheme);
+        
+        const icon = themeToggleBtn.querySelector('.material-symbols-outlined');
+        if (icon) {
+          icon.textContent = newTheme === 'dark' ? 'dark_mode' : 'light_mode';
+        }
+      });
+      
+      // 确保侧边栏在所有页面中都有一致的间距
+      const alignSidebars = () => {
+        // 移除JavaScript中设置的margin-top，使用CSS统一管理
+        const leftSidebar = document.querySelector('.left-sidebar') as HTMLElement;
+        const rightSidebar = document.querySelector('.right-sidebar') as HTMLElement;
+        
+        if (leftSidebar) {
+          leftSidebar.style.marginTop = '';
+        }
+        
+        if (rightSidebar) {
+          rightSidebar.style.marginTop = '';
+        }
+      };
+      
+      // 页面加载完成后执行
+      window.addEventListener('load', alignSidebars);
+      
+      // 窗口大小改变时重新对齐
+      window.addEventListener('resize', alignSidebars);
+      
+      // 导航栏滚动效果
+      window.addEventListener('scroll', () => {
+        const nav = document.querySelector('nav');
+        if (window.scrollY > 50) {
+          nav?.classList.add('scrolled');
+        } else {
+          nav?.classList.remove('scrolled');
+        }
+      });
+
+      // 平滑滚动
+      document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', (e: Event) => {
+          e.preventDefault();
+          const currentTarget = e.currentTarget as HTMLAnchorElement;
+          const href = currentTarget.getAttribute('href');
+          if (href) {
+            const target = document.querySelector(href);
+            if (target) {
+              target.scrollIntoView({ 
+                behavior: 'smooth',
+                block: 'start'
+              });
+            }
+          }
+        });
+      });
+
+      // 移动端菜单
+      const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+      const mobileCloseBtn = document.querySelector('.mobile-close-btn');
+      const mobileNavMenu = document.querySelector('.mobile-nav-menu');
+      
+      // 创建遮罩层
+      const overlay = document.createElement('div');
+      overlay.className = 'mobile-nav-overlay';
+      document.body.appendChild(overlay);
+      
+      // 菜单显示函数
+      const showMobileMenu = () => {
+        mobileNavMenu?.classList.add('active');
+        overlay.classList.add('active');
+        document.body.style.overflow = 'hidden'; // 防止背景滚动
+        mobileMenuBtn?.setAttribute('aria-expanded', 'true');
+      };
+      
+      // 菜单隐藏函数
+      const hideMobileMenu = () => {
+        mobileNavMenu?.classList.remove('active');
+        overlay.classList.remove('active');
+        document.body.style.overflow = 'auto'; // 恢复背景滚动
+        mobileMenuBtn?.setAttribute('aria-expanded', 'false');
+      };
+      
+      // 点击菜单按钮显示菜单
+      mobileMenuBtn?.addEventListener('click', showMobileMenu);
+      
+      // 点击关闭按钮隐藏菜单
+      mobileCloseBtn?.addEventListener('click', hideMobileMenu);
+      
+      // 点击遮罩层隐藏菜单
+      overlay.addEventListener('click', hideMobileMenu);
+      
+      // 点击移动菜单中的链接后隐藏菜单
+      const mobileNavLinks = document.querySelectorAll('.mobile-nav-items a');
+      mobileNavLinks.forEach(link => {
+        link.addEventListener('click', hideMobileMenu);
+      });
+      
+      // 响应式调整
+      window.addEventListener('resize', () => {
+        if (window.innerWidth > 768) {
+          hideMobileMenu();
+        }
+      });
+      
+      // 滚动触发动画
+      const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+      };
+      
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          const element = entry.target;
+          
+          if (entry.isIntersecting) {
+            if (element.classList.contains('fade-in')) {
+              element.classList.add('visible');
+            } else {
+              element.classList.add('active');
+            }
+            
+            // 动画完成后取消观察，提高性能
+            setTimeout(() => {
+              observer.unobserve(element);
+            }, 800); // 与CSS动画持续时间匹配
+          } else {
+            // 可选：当元素离开视口时移除类，实现重复动画
+            // 注释掉下面这行以保持动画只触发一次
+            // if (element.classList.contains('fade-in')) {
+            //   element.classList.remove('visible');
+            // } else {
+            //   element.classList.remove('active');
+            // }
+          }
+        });
+      }, observerOptions);
+      
+      // 观察所有带有scroll-animation或fade-in类的元素
+      const animatedElements = document.querySelectorAll('.scroll-animation, .fade-in');
+      animatedElements.forEach(element => {
+        observer.observe(element);
+      });
+      
+      // 初始检查：如果元素已经在视口中，立即触发动画
+      const checkInitialElements = () => {
+        animatedElements.forEach(element => {
+          const rect = element.getBoundingClientRect();
+          if (rect.top < window.innerHeight && rect.bottom > 0) {
+            if (element.classList.contains('fade-in')) {
+              element.classList.add('visible');
+            } else {
+              element.classList.add('active');
+            }
+          }
+        });
+      };
+      
+      // 页面加载完成后检查初始可见元素
+      checkInitialElements();
+
+
+    });
+
+    // 暴露博客文章数据给全局对象，供搜索组件使用
+    window.blogPosts = blogPosts;
+  </script>
+</body>
+</html>

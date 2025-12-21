@@ -1,0 +1,21 @@
+---
+interface Props {
+  title: string;
+  value: number;
+  icon: string;
+}
+
+const { title, value, icon } = Astro.props;
+---
+
+<div class="card glass stats-card">
+  <div class="stats-card-content">
+    <div class="stats-info">
+      <h4>{title}</h4>
+      <p>{value}</p>
+    </div>
+    <div class="stats-icon" style="background-color: {color};">
+      <span class="material-symbols-outlined" aria-hidden="true">{icon}</span>
+    </div>
+  </div>
+</div>

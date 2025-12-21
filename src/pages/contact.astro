@@ -1,0 +1,151 @@
+---
+import MainLayout from '../layouts/MainLayout.astro';
+
+const title = '联系我';
+const description = '联系XingGreen Blog的作者';
+---
+
+<MainLayout title={title} description={description}>
+  <section class="contact">
+    <div class="container">
+      <h2 class="section-title">联系我</h2>
+      <p class="section-description">如果您有任何问题或建议，欢迎随时联系我。</p>
+      
+      <div class="contact-content">
+        <!-- 联系信息 -->
+        <div class="contact-info">
+          <h3>联系方式</h3>
+          <div class="contact-item">
+            <span class="material-symbols-outlined">email</span>
+            <span>483165474@qq.com</span>
+          </div>
+        </div>
+        
+
+  </section>
+</MainLayout>
+
+<style>
+.contact {
+  padding: 2rem 0;
+  min-height: 100vh;
+}
+
+.section-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  text-align: center;
+  color: var(--md3-on-surface);
+}
+
+.section-description {
+  font-size: 1.125rem;
+  color: var(--md3-on-surface-variant);
+  text-align: center;
+  margin-bottom: 3rem;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.contact-content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  align-items: start;
+}
+
+.contact-info {
+  background: var(--md3-surface-container-low);
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px var(--md3-shadow-sm);
+}
+
+.contact-info h3 {
+  font-size: 1.5rem;
+  margin-bottom: 1.5rem;
+  color: var(--md3-on-surface);
+}
+
+.contact-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1rem;
+  color: var(--md3-on-surface-variant);
+}
+
+.contact-item .material-symbols-outlined {
+  margin-right: 0.75rem;
+  color: var(--md3-primary);
+}
+
+.contact-form {
+  background: var(--md3-surface-container-low);
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px var(--md3-shadow-sm);
+}
+
+.contact-form h3 {
+  font-size: 1.5rem;
+  margin-bottom: 1.5rem;
+  color: var(--md3-on-surface);
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  color: var(--md3-on-surface);
+}
+
+.form-group input,
+.form-group textarea {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid var(--md3-outline);
+  border-radius: 8px;
+  background: var(--md3-surface);
+  color: var(--md3-on-surface);
+  font-size: 1rem;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: var(--md3-primary);
+  box-shadow: 0 0 0 3px var(--md3-primary-container);
+}
+
+.btn {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-primary {
+  background: var(--md3-primary);
+  color: var(--md3-on-primary);
+}
+
+.btn-primary:hover {
+  background: var(--md3-primary-dark);
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .contact-content {
+    grid-template-columns: 1fr;
+  }
+}
+</style>

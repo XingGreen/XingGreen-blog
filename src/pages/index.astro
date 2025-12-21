@@ -1,0 +1,96 @@
+---
+import MainLayout from '../layouts/MainLayout.astro';
+import Hero from '../components/Hero.astro';
+import BlogCard from '../components/BlogCard.astro';
+import AuthorProfile from '../components/AuthorProfile.astro';
+import SidebarComponents from '../components/SidebarComponents.astro';
+import RightSidebar from '../components/RightSidebar.astro';
+import { blogPosts } from '../data/blogPosts';
+
+// 博客统计数据
+const blogStats = [
+  { title: "文章", value: 0, icon: "article", color: "rgba(103, 80, 164, 0.8)" },
+  { title: "分类", value: 0, icon: "category", color: "rgba(98, 91, 113, 0.8)" },
+  { title: "标签", value: 0, icon: "label", color: "rgba(125, 82, 96, 0.8)" },
+  { title: "总字数", value: 0, icon: "text_fields", color: "rgba(40, 205, 197, 0.8)" }
+];
+
+// 计算统计数据
+blogStats.forEach(stat => {
+  if (stat.title === "文章") {
+    stat.value = blogPosts.length;
+  } else if (stat.title === "分类") {
+    stat.value = [...new Set(blogPosts.map(post => post.category))].length;
+  } else if (stat.title === "标签") {
+    stat.value = [...new Set(blogPosts.flatMap(post => post.tags))].length;
+  } else if (stat.title === "总字数") {
+    stat.value = blogPosts.reduce((acc, post) => acc + post.excerpt.length, 0);
+  }
+});
+---
+
+<MainLayout title="XingGreen Blog" class="home-page">
+  <!-- 左侧边栏 -->
+  <aside slot="left-sidebar">
+    <AuthorProfile 
+      name="XingGreen" 
+      quote="人生如梦，不期而遇" 
+    />
+    <SidebarComponents posts={blogPosts} />
+  </aside>
+  
+  <!-- 中间内容区 -->
+  <Hero 
+    title="永恒瞬间，不费青春，人生苦短，不留遗憾！"
+    subtitle="Move on, walk alone. Nothing lasts. Life is short ——no regrets."
+  />
+
+  <section>
+    <div class="container">
+
+
+      <!-- 博客文章列表 -->
+      <div class="blog-section">
+        <div class="section-header">
+          <h2>最新文章</h2>
+          <a href="/blog" class="btn btn-primary">
+            <span class="material-symbols-outlined">article_list</span>
+            查看全部
+          </a>
+        </div>
+        
+        <div class="blog-grid stagger-container">
+          {blogPosts.map((post, index) => (
+            <div class={`scroll-animation ${index % 3 === 0 ? 'left' : index % 3 === 1 ? 'right' : 'bottom'} scale`} style={{ '--stagger-index': index + 1 }}>
+              <BlogCard
+                title={post.title}
+                excerpt={post.excerpt}
+                date={post.date}
+                category={post.category}
+                tags={post.tags}
+                author={post.author}
+                slug={post.slug}
+              />
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 几何装饰元素 -->
+  <div class="geometric-decor geometric-decor-1"></div>
+  <div class="geometric-decor geometric-decor-2"></div>
+  <div class="geometric-decor geometric-decor-3"></div>
+
+  <!-- 右侧边栏 -->
+  <aside slot="right-sidebar">
+    <RightSidebar />
+  </aside>
+
+  <!-- 暴露博客文章数据给全局对象，供搜索组件使用 -->
+  <script define:vars={{ blogPosts }} is:inline>
+    window.blogPosts = blogPosts;
+  </script>
+
+</MainLayout>

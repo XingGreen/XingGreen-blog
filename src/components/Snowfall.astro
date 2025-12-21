@@ -1,0 +1,198 @@
+---
+// Snowfall 雪花粒子效果组件
+const { enabled = true } = Astro.props;
+---
+
+<div id="snowfall-container" class={`snowfall-container ${enabled ? 'active' : ''}`}></div>
+
+<button id="snowfall-toggle" class="snowfall-toggle" aria-label="开关雪花效果">
+  <span class="material-symbols-outlined">
+    snowflake
+  </span>
+</button>
+
+<style>
+  .snowfall-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 100;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+  }
+
+  .snowfall-container.active {
+    opacity: 1;
+  }
+
+  .snowfall-toggle {
+    position: fixed;
+    bottom: 100px;
+    right: 20px;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    backdrop-filter: blur(12px);
+    color: var(--text-primary);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s cubic-bezier(.4,0,.2,1);
+    z-index: 1000;
+    box-shadow: 0 4px 12px var(--shadow);
+  }
+
+  .snowfall-toggle:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px var(--shadow);
+    border-color: var(--accent-color);
+  }
+
+  .snowfall-toggle:active {
+    transform: translateY(0);
+  }
+</style>
+
+<script is:inline>
+  class Snowfall {
+    constructor(container, options = {}) {
+      this.container = container;
+      this.options = {
+        particleCount: options.particleCount || 100,
+        speed: options.speed || 1,
+        size: options.size || 2,
+        opacity: options.opacity || 0.8,
+        ...options
+      };
+      this.particles = [];
+      this.isRunning = false;
+      this.animationId = null;
+      
+      this.init();
+    }
+
+    init() {
+      for (let i = 0; i < this.options.particleCount; i++) {
+        this.particles.push(this.createParticle());
+      }
+    }
+
+    createParticle() {
+      const particle = document.createElement('div');
+      particle.className = 'snowflake';
+      particle.style.position = 'absolute';
+      particle.style.width = `${Math.random() * this.options.size + 1}px`;
+      particle.style.height = particle.style.width;
+      particle.style.background = `rgba(255, 255, 255, ${Math.random() * this.options.opacity + 0.3})`;
+      particle.style.borderRadius = '50%';
+      particle.style.pointerEvents = 'none';
+      particle.style.filter = 'blur(1px)';
+      
+      this.resetParticle(particle);
+      this.container.appendChild(particle);
+      
+      return particle;
+    }
+
+    resetParticle(particle) {
+      particle.style.left = `${Math.random() * 100}%`;
+      particle.style.top = '-10px';
+      particle.style.opacity = `${Math.random() * 0.7 + 0.3}`;
+      particle.style.transform = `translateX(0)`;
+      particle.dataset.speed = `${Math.random() * 0.5 + this.options.speed}`;
+      particle.dataset.swirl = `${Math.random() * 4 - 2}`;
+    }
+
+    update() {
+      this.particles.forEach(particle => {
+        const top = parseFloat(particle.style.top) || 0;
+        const speed = parseFloat(particle.dataset.speed);
+        const swirl = parseFloat(particle.dataset.swirl);
+        
+        particle.style.top = `${top + speed}px`;
+        particle.style.transform = `translateX(${Math.sin(top * 0.01) * swirl}px)`;
+        
+        if (top > this.container.offsetHeight) {
+          this.resetParticle(particle);
+        }
+      });
+    }
+
+    animate() {
+      if (!this.isRunning) return;
+      
+      this.update();
+      this.animationId = requestAnimationFrame(() => this.animate());
+    }
+
+    start() {
+      if (this.isRunning) return;
+      this.isRunning = true;
+      this.animate();
+    }
+
+    stop() {
+      if (!this.isRunning) return;
+      this.isRunning = false;
+      if (this.animationId) {
+        cancelAnimationFrame(this.animationId);
+        this.animationId = null;
+      }
+    }
+
+    toggle() {
+      if (this.isRunning) {
+        this.stop();
+      } else {
+        this.start();
+      }
+    }
+
+    destroy() {
+      this.stop();
+      this.particles.forEach(particle => {
+        if (particle.parentNode) {
+          particle.parentNode.removeChild(particle);
+        }
+      });
+      this.particles = [];
+    }
+  }
+
+  // 初始化雪花效果
+  document.addEventListener('DOMContentLoaded', () => {
+    const container = document.getElementById('snowfall-container');
+    const toggle = document.getElementById('snowfall-toggle');
+    
+    if (!container) return;
+    
+    const snowfall = new Snowfall(container, {
+      particleCount: 150,
+      speed: 1.5,
+      size: 3
+    });
+    
+    // 检查本地存储中的设置
+    const snowfallEnabled = localStorage.getItem('snowfall-enabled') === 'false' ? false : true;
+    container.classList.toggle('active', snowfallEnabled);
+    
+    if (snowfallEnabled) {
+      snowfall.start();
+    }
+    
+    // 绑定开关事件
+    if (toggle) {
+      toggle.addEventListener('click', () => {
+        const isActive = container.classList.toggle('active');
+        snowfall.toggle();
+        localStorage.setItem('snowfall-enabled', isActive);
+      });
+    }
+  });
+</script>

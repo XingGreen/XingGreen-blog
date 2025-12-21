@@ -1,0 +1,106 @@
+---
+import { getCollection } from 'astro:content';
+
+interface Props {
+  config: {
+    title?: string;
+  };
+}
+
+const { config } = Astro.props;
+const defaultConfig = {
+  title: '站点统计',
+  ...config,
+};
+
+// 获取所有博客文章
+const posts = await getCollection('blog');
+
+// 统计数据
+const totalPosts = posts.length;
+
+// 统计分类数
+const categories = new Set(posts.map(post => post.data.category));
+const totalCategories = categories.size;
+
+// 统计标签数
+const tags = new Set(posts.flatMap(post => post.data.tags));
+const totalTags = tags.size;
+
+// 计算总字数（近似值）
+const totalWords = posts.reduce((total) => {
+  // 简单估算：假设每篇文章的内容平均有500字
+  // 实际应用中应该解析markdown内容计算准确字数
+  return total + 500;
+}, 0);
+---
+
+<div class="site-stats-card glass">
+  <h3 class="card-title">{defaultConfig.title}</h3>
+  <div class="stats-grid">
+    <div class="stat-item">
+      <span class="stat-number">{totalPosts}</span>
+      <span class="stat-label">文章总数</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-number">{totalCategories}</span>
+      <span class="stat-label">分类总数</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-number">{totalTags}</span>
+      <span class="stat-label">标签总数</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-number">{Math.round(totalWords / 1000)}k</span>
+      <span class="stat-label">总字数</span>
+    </div>
+  </div>
+</div>
+
+<style scoped>
+.site-stats-card {
+  padding: 1.5rem;
+}
+
+.card-title {
+  font-size: 1.25rem;
+  margin: 0 0 1.5rem 0;
+  color: var(--md3-on-surface);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+}
+
+.stat-item {
+  text-align: center;
+  padding: 0.75rem;
+  background-color: var(--md3-surface-container);
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+.stat-item:hover {
+  background-color: var(--md3-secondary-container);
+  transform: translateY(-2px);
+}
+
+.stat-number {
+  display: block;
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--md3-primary);
+  margin-bottom: 0.25rem;
+}
+
+.stat-label {
+  display: block;
+  font-size: 0.875rem;
+  color: var(--md3-on-surface-variant);
+}
+</style>

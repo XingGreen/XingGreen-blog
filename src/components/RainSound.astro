@@ -1,0 +1,125 @@
+---
+// RainSound 雨声效果组件
+---
+
+<!-- 雨声音频元素 -->
+<audio id="rain-audio" loop preload="auto" class="rain-audio">
+  <!-- 使用免费的雨声音频资源 -->
+  <source src="http://music.163.com/song/media/outer/url?id=485533647.mp3" type="audio/mp3">
+  您的浏览器不支持音频元素。
+</audio>
+
+<button id="rain-toggle" class="rain-toggle" aria-label="开关雨声效果">
+  <span class="material-symbols-outlined">
+    umbrella
+  </span>
+</button>
+
+<style>
+  .rain-audio {
+    display: none;
+  }
+
+  .rain-toggle {
+    position: fixed;
+    bottom: 160px;
+    right: 20px;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    backdrop-filter: blur(12px);
+    color: var(--text-primary);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s cubic-bezier(.4,0,.2,1);
+    z-index: 1000;
+    box-shadow: 0 4px 12px var(--shadow);
+  }
+
+  .rain-toggle:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px var(--shadow);
+    border-color: var(--accent-color);
+  }
+
+  .rain-toggle:active {
+    transform: translateY(0);
+  }
+
+  .rain-toggle.active {
+    background: rgba(133, 212, 255, 0.3);
+    border-color: rgba(133, 212, 255, 0.6);
+  }
+</style>
+
+<script is:inline>
+  class RainSound {
+    constructor(audioElement, toggleButton) {
+      this.audio = audioElement;
+      this.toggleButton = toggleButton;
+      this.isPlaying = false;
+      
+      this.init();
+    }
+
+    init() {
+      // 设置默认音量
+      this.audio.volume = 0.3;
+      
+      // 检查本地存储中的设置
+      const rainEnabled = localStorage.getItem('rain-enabled') === 'false' ? false : true;
+      this.toggleButton.classList.toggle('active', rainEnabled);
+      
+      if (rainEnabled) {
+        this.play();
+      }
+      
+      // 绑定开关事件
+      this.toggleButton.addEventListener('click', () => {
+        this.toggle();
+      });
+    }
+
+    play() {
+      if (!this.isPlaying) {
+        this.audio.play().catch(error => {
+          console.error('无法播放雨声:', error);
+        });
+        this.isPlaying = true;
+        this.toggleButton.classList.add('active');
+        localStorage.setItem('rain-enabled', 'true');
+      }
+    }
+
+    pause() {
+      if (this.isPlaying) {
+        this.audio.pause();
+        this.isPlaying = false;
+        this.toggleButton.classList.remove('active');
+        localStorage.setItem('rain-enabled', 'false');
+      }
+    }
+
+    toggle() {
+      if (this.isPlaying) {
+        this.pause();
+      } else {
+        this.play();
+      }
+    }
+  }
+
+  // 初始化雨声效果
+  document.addEventListener('DOMContentLoaded', () => {
+    const audioElement = document.getElementById('rain-audio');
+    const toggleButton = document.getElementById('rain-toggle');
+    
+    if (audioElement && toggleButton) {
+      new RainSound(audioElement, toggleButton);
+    }
+  });
+</script>

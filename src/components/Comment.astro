@@ -1,0 +1,194 @@
+---
+interface Props {
+  path?: string;
+  placeholder?: string;
+  serverURL?: string;
+}
+
+const {
+  placeholder = '留下你的评论吧~',
+  serverURL = 'https://waline.vercel.app'
+} = Astro.props;
+
+// 定义默认配置
+const finalServerURL = serverURL;
+const finalPlaceholder = placeholder;
+---
+
+<div class="comments-section">
+  <div class="container">
+    <h2 class="section-title">评论</h2>
+    <div class="comments-container">
+      <!-- Waline 评论系统容器 -->
+      <div id="waline-comments"></div>
+    </div>
+  </div>
+</div>
+
+<script define:vars={{ finalServerURL, finalPlaceholder }} is:inline>
+  // 集成 Waline 评论系统
+  import { init } from '@waline/client';
+  import '@waline/client/dist/waline.css';
+  
+  // 获取当前主题
+  const getCurrentTheme = () => {
+    return document.documentElement.getAttribute('data-theme') || 
+           (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+  };
+  
+  // 初始化 Waline
+  const waline = init({
+    el: '#waline-comments',
+    serverURL: finalServerURL,
+    path: window.location.pathname,
+    lang: 'zh-CN',
+    requiredMeta: ['nick', 'mail'],
+    login: 'enable',
+    pageSize: 10,
+    emoji: [
+      'https://cdn.jsdelivr.net/npm/@waline/emojis@1.0.1/weibo/index.json',
+      'https://cdn.jsdelivr.net/npm/@waline/emojis@1.0.1/alus/index.json'
+    ],
+    dark: getCurrentTheme() === 'dark' ? 'auto' : 'light'
+  });
+  
+  // 保存 Waline 实例到全局对象
+  window.Waline = waline;
+  
+  // 监听主题变化
+  const observer = new MutationObserver((mutations) => {
+    mutations.forEach((mutation) => {
+      if (mutation.type === 'attributes' && mutation.attributeName === 'data-theme') {
+        const newTheme = mutation.target.getAttribute('data-theme');
+        waline.update({ dark: newTheme === 'dark' ? 'auto' : 'light' });
+      }
+    });
+  });
+  
+  // 观察主题属性变化
+  observer.observe(document.documentElement, {
+    attributes: true,
+    attributeFilter: ['data-theme']
+  });
+  
+  // 添加「喵～」气泡效果
+  const addMeowBubble = () => {
+    const commentsSection = document.querySelector('.comments-section');
+    if (!commentsSection) return;
+    
+    // 创建气泡元素
+    const meowBubble = document.createElement('div');
+    meowBubble.className = 'meow-bubble';
+    meowBubble.textContent = '喵～';
+    
+    // 设置样式
+    meowBubble.style.cssText = `
+      position: absolute;
+      top: -20px;
+      right: 20px;
+      background: var(--bg-primary);
+      color: white;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: 500;
+      box-shadow: 0 4px 12px rgba(255, 183, 197, 0.5);
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.3s cubic-bezier(.4,0,.2,1);
+      z-index: 10;
+    `;
+    
+    // 添加到评论区
+    commentsSection.style.position = 'relative';
+    commentsSection.appendChild(meowBubble);
+    
+    // 延迟显示气泡
+    setTimeout(() => {
+      meowBubble.style.opacity = '1';
+      meowBubble.style.transform = 'translateY(0)';
+    }, 500);
+    
+    // 一段时间后隐藏气泡
+    setTimeout(() => {
+      meowBubble.style.opacity = '0';
+      meowBubble.style.transform = 'translateY(-20px)';
+    }, 3000);
+  };
+  
+  // 页面加载完成后显示气泡
+  window.addEventListener('DOMContentLoaded', () => {
+    addMeowBubble();
+  });
+</script>
+
+<style>
+  /* 评论区样式 */
+  .comments-section {
+    padding: 4rem 0;
+    position: relative;
+  }
+  
+  .comments-container {
+    max-width: 65ch;
+    margin: 0 auto;
+    padding: 2rem;
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: 8px;
+    backdrop-filter: blur(12px);
+    box-shadow: 0 8px 32px var(--shadow);
+  }
+  
+  /* Waline 自定义样式 */
+  :global(.wl-container) {
+    font-family: inherit;
+  }
+  
+  :global(.wl-input) {
+    border: 1px solid var(--glass-border);
+    border-radius: 8px;
+    background: var(--glass-bg);
+    backdrop-filter: blur(12px);
+    transition: all 0.3s cubic-bezier(.4,0,.2,1);
+  }
+  
+  :global(.wl-input:focus) {
+    border-color: var(--bg-primary);
+    box-shadow: 0 0 0 3px rgba(255, 183, 197, 0.2);
+  }
+  
+  :global(.wl-btn) {
+    background: var(--bg-primary);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    transition: all 0.3s cubic-bezier(.4,0,.2,1);
+  }
+  
+  :global(.wl-btn:hover) {
+    background: var(--bg-primary);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(255, 183, 197, 0.4);
+  }
+  
+  :global(.wl-comment-item) {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid var(--glass-border);
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    padding: 1rem;
+  }
+  
+  /* 响应式设计 */
+  @media (max-width: 768px) {
+    .comments-section {
+      padding: 2rem 0;
+    }
+    
+    .comments-container {
+      padding: 1rem;
+      margin: 0 1rem;
+    }
+  }
+</style>

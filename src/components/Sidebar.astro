@@ -1,0 +1,85 @@
+---
+import { sidebarLayoutConfig } from '../config';
+
+interface Props {
+  position: 'left' | 'right';
+}
+
+const { position } = Astro.props;
+
+// 获取指定位置的侧边栏配置
+const sidebarConfig = sidebarLayoutConfig.find(sidebar => sidebar.position === position);
+const components = sidebarConfig ? sidebarConfig.components.filter(comp => comp.enabled) : [];
+
+// 根据组件名称动态导入组件
+async function loadComponent(componentName: string) {
+  try {
+    // 动态导入组件
+    const componentModule = await import(`./sidebar/${componentName}.astro`);
+    return componentModule.default;
+  } catch (error) {
+    console.error(`Failed to load component ${componentName}:`, error);
+    return null;
+  }
+}
+---
+
+<aside class={`sidebar ${position}-sidebar`} aria-label={`${position === 'left' ? '左侧' : '右侧'}边栏`}>
+  {components.length > 0 && (
+    <div class="sidebar-container">
+      {components
+        .sort((a, b) => a.order - b.order)
+        .map(async (component) => {
+          const Component = await loadComponent(component.name);
+          if (Component) {
+            return <Component config={component.config} />;
+          }
+          return null;
+        })}
+    </div>
+  )}
+</aside>
+
+<style scoped>
+.sidebar {
+  padding: 1.5rem;
+  position: relative;
+  min-height: auto;
+  overflow-y: visible;
+  transition: all 0.3s ease;
+}
+
+.sidebar-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* 响应式设计 */
+@media (max-width: 1024px) {
+  .sidebar {
+    position: static;
+    height: auto;
+    padding: 1rem;
+  }
+}
+
+/* 滚动条样式 */
+.sidebar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.sidebar::-webkit-scrollbar-track {
+  background: var(--glass-bg);
+  border-radius: 3px;
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+  border-radius: 3px;
+}
+
+.sidebar::-webkit-scrollbar-thumb:hover {
+  background: var(--md3-primary);
+}
+</style>
