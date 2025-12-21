@@ -1,6 +1,6 @@
 # XingGreen Blog
 
-一个基于 Astro 框架构建的现代化个人博客，采用 Material Design 3 设计风格和动漫背景，提供优雅的阅读体验。
+一个基于 Astro 框架构建的现代化个人博客，采用动漫背景，提供优雅的阅读体验。
 
 ## 特性
 
@@ -43,6 +43,7 @@ npm run dev
 ```
 http://localhost:4321
 ```
+## 博客的风格设计我参考了mizuki二次元动漫博客和vahiru博客
 
 ##  项目结构
 
@@ -205,5 +206,6 @@ MIT License
 - Bilibili: [XingGreen](https://space.bilibili.com/1342082835)
 
 ---
+
 
 
