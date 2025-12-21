@@ -46,9 +46,9 @@ const { placeholder = "搜索文章..." } = Astro.props;
 .search-input {
   width: 100%;
   padding: 12px 16px 12px 44px;
-  border: 1px solid var(--glass-border);
+  border: 1px solid var(--border-color);
   border-radius: 8px;
-  background: var(--glass-bg);
+  background: var(--md3-surface);
   color: var(--text-primary);
   font-size: 1rem;
   font-family: inherit;
@@ -59,8 +59,8 @@ const { placeholder = "搜索文章..." } = Astro.props;
 
 .search-input:focus {
   outline: none;
-  border-color: var(--accent-color);
-  box-shadow: 0 0 0 3px rgba(152, 251, 152, 0.2);
+  border-color: var(--md3-primary);
+  box-shadow: 0 0 0 3px var(--md3-primary-container);
   transform: translateY(-1px);
 }
 
@@ -76,10 +76,10 @@ const { placeholder = "搜索文章..." } = Astro.props;
   margin-top: 8px;
   max-height: 400px;
   overflow-y: auto;
-  background: var(--glass-bg);
-  border: 1px solid var(--glass-border);
+  background: var(--md3-surface);
+  border: 1px solid var(--border-color);
   border-radius: 8px;
-  box-shadow: 0 8px 32px var(--shadow);
+  box-shadow: var(--shadow-md);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   z-index: 100;
@@ -92,7 +92,7 @@ const { placeholder = "搜索文章..." } = Astro.props;
 
 .search-result-item {
   padding: 12px 16px;
-  border-bottom: 1px solid var(--glass-border);
+  border-bottom: 1px solid var(--border-color);
   cursor: pointer;
   transition: background-color 0.3s ease;
 }
@@ -103,7 +103,7 @@ const { placeholder = "搜索文章..." } = Astro.props;
 }
 
 .search-result-item:hover {
-  background-color: rgba(255, 255, 255, 0.1);
+  background-color: var(--bg-tertiary);
 }
 
 .search-result-title {
@@ -134,7 +134,7 @@ const { placeholder = "搜索文章..." } = Astro.props;
 }
 
 .search-result-category {
-  background-color: rgba(255, 255, 255, 0.1);
+  background-color: var(--md3-surface-variant);
   padding: 2px 8px;
   border-radius: 12px;
 }
@@ -145,17 +145,17 @@ const { placeholder = "搜索文章..." } = Astro.props;
 }
 
 .search-results::-webkit-scrollbar-track {
-  background: rgba(255, 255, 255, 0.1);
+  background: var(--bg-tertiary);
   border-radius: 3px;
 }
 
 .search-results::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.3);
+  background: var(--border-color);
   border-radius: 3px;
 }
 
 .search-results::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.5);
+  background: var(--text-tertiary);
 }
 
 /* 响应式设计 */

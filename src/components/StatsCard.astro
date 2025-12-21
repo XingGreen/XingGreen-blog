@@ -3,12 +3,13 @@ interface Props {
   title: string;
   value: number;
   icon: string;
+  color?: string;
 }
 
-const { title, value, icon } = Astro.props;
+const { title, value, icon, color = 'var(--md3-primary)' } = Astro.props;
 ---
 
-<div class="card glass stats-card">
+<div class="stats-card">
   <div class="stats-card-content">
     <div class="stats-info">
       <h4>{title}</h4>
@@ -19,3 +20,55 @@ const { title, value, icon } = Astro.props;
     </div>
   </div>
 </div>
+
+<style>
+.stats-card {
+  background: var(--md3-surface);
+  border: 1px solid var(--md3-outline);
+  border-radius: var(--border-radius-md);
+  padding: 1.5rem;
+  box-shadow: var(--shadow-sm);
+  transition: all 0.3s cubic-bezier(.4,0,.2,1);
+}
+
+.stats-card:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+
+.stats-card-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.stats-info h4 {
+  margin: 0 0 0.5rem 0;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--md3-on-surface-variant);
+}
+
+.stats-info p {
+  margin: 0;
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--md3-on-surface);
+}
+
+.stats-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: var(--border-radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  box-shadow: var(--shadow-md);
+}
+
+.stats-icon .material-symbols-outlined {
+  font-size: 1.8rem;
+  font-weight: 500;
+}
+</style>

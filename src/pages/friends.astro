@@ -22,8 +22,8 @@ const friends = [
       <p class="section-description"></p>
       
       <div class="friends-grid">
-        {friends.map((friend, index) => (
-          <a href={friend.url} target="_blank" rel="noopener noreferrer" class="friend-card" key={index}>
+        {friends.map((friend) => (
+          <a href={friend.url} target="_blank" rel="noopener noreferrer" class="friend-card">
             <div class="friend-content">
               <div class="friend-avatar">
                 <img src={friend.avatar} alt={friend.name}>

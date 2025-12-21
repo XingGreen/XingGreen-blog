@@ -83,12 +83,17 @@ const tags = Object.entries(tagCounts).sort((a, b) => b[1] - a[1]);
 }
 
 .sidebar-card {
-  background: var(--glass-bg);
-  border: 1px solid var(--glass-border);
-  border-radius: 12px;
+  background: var(--md3-surface);
+  border: 1px solid var(--md3-outline);
+  border-radius: var(--border-radius-md);
   padding: 1.5rem;
-  backdrop-filter: blur(10px);
-  box-shadow: 0 4px 6px var(--shadow);
+  box-shadow: var(--shadow-sm);
+  transition: all 0.3s cubic-bezier(.4,0,.2,1);
+}
+
+.sidebar-card:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-1px);
 }
 
 .sidebar-title {
@@ -98,23 +103,23 @@ const tags = Object.entries(tagCounts).sort((a, b) => b[1] - a[1]);
   font-size: 1.2rem;
   font-weight: 600;
   margin-bottom: 1rem;
-  color: var(--text-primary);
+  color: var(--md3-on-surface);
 }
 
 .sidebar-title .material-symbols-outlined {
   font-size: 1.3rem;
-  color: var(--accent-color);
+  color: var(--md3-primary);
 }
 
 /* 公告组件样式 */
 .announcement-text {
   font-size: 0.95rem;
   line-height: 1.6;
-  color: var(--text-secondary);
+  color: var(--md3-on-surface-variant);
   padding: 0.5rem;
-  background: rgba(152, 251, 152, 0.1);
-  border-left: 3px solid var(--accent-color);
-  border-radius: 4px;
+  background: var(--md3-primary-container);
+  border-left: 3px solid var(--md3-primary);
+  border-radius: var(--border-radius-sm);
 }
 
 /* 分类组件样式 */
@@ -131,28 +136,32 @@ const tags = Object.entries(tagCounts).sort((a, b) => b[1] - a[1]);
   justify-content: space-between;
   align-items: center;
   padding: 0.75rem;
-  border-radius: 8px;
-  color: var(--text-primary);
+  border-radius: var(--border-radius-sm);
+  color: var(--md3-on-surface);
   text-decoration: none;
-  transition: all 0.3s ease;
-  background: rgba(255, 255, 255, 0.05);
+  transition: all 0.3s cubic-bezier(.4,0,.2,1);
+  background: var(--md3-surface);
+  border: 1px solid var(--md3-outline);
 }
 
 .category-link:hover {
-  background: var(--accent-color);
-  color: white;
+  background: var(--md3-primary);
+  color: var(--md3-on-primary);
   transform: translateX(5px);
+  border-color: var(--md3-primary);
 }
 
 .category-count {
   font-size: 0.8rem;
-  background: rgba(255, 255, 255, 0.2);
+  background: var(--md3-surface-variant);
   padding: 0.2rem 0.5rem;
-  border-radius: 10px;
+  border-radius: var(--border-radius-full);
+  color: var(--md3-on-surface-variant);
 }
 
 .category-link:hover .category-count {
-  background: rgba(255, 255, 255, 0.3);
+  background: var(--md3-on-primary);
+  color: var(--md3-primary);
 }
 
 /* 标签组件样式 */
@@ -167,27 +176,31 @@ const tags = Object.entries(tagCounts).sort((a, b) => b[1] - a[1]);
   align-items: center;
   gap: 0.3rem;
   padding: 0.5rem 0.8rem;
-  border-radius: 20px;
-  background: rgba(255, 255, 255, 0.08);
-  color: var(--text-primary);
+  border-radius: var(--border-radius-full);
+  background: var(--md3-surface);
+  color: var(--md3-on-surface);
   text-decoration: none;
   font-size: 0.9rem;
-  transition: all 0.3s ease;
+  transition: all 0.3s cubic-bezier(.4,0,.2,1);
+  border: 1px solid var(--md3-outline);
 }
 
 .tag:hover {
-  background: var(--accent-color);
-  color: white;
+  background: var(--md3-primary);
+  color: var(--md3-on-primary);
   transform: translateY(-2px);
-  box-shadow: 0 4px 8px var(--shadow);
+  box-shadow: var(--shadow-md);
+  border-color: var(--md3-primary);
 }
 
 .tag-count {
   font-size: 0.75rem;
   opacity: 0.8;
+  color: var(--md3-on-surface-variant);
 }
 
 .tag:hover .tag-count {
   opacity: 1;
+  color: var(--md3-on-primary);
 }
 </style>

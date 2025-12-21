@@ -86,13 +86,13 @@ const finalPlaceholder = placeholder;
       position: absolute;
       top: -20px;
       right: 20px;
-      background: var(--bg-primary);
-      color: white;
+      background: var(--md3-primary);
+      color: var(--md3-on-primary);
       padding: 8px 16px;
-      border-radius: 20px;
+      border-radius: var(--border-radius-full);
       font-size: 14px;
       font-weight: 500;
-      box-shadow: 0 4px 12px rgba(255, 183, 197, 0.5);
+      box-shadow: 0 4px 12px var(--md3-primary-container);
       opacity: 0;
       transform: translateY(20px);
       transition: all 0.3s cubic-bezier(.4,0,.2,1);
@@ -133,11 +133,10 @@ const finalPlaceholder = placeholder;
     max-width: 65ch;
     margin: 0 auto;
     padding: 2rem;
-    background: var(--glass-bg);
-    border: 1px solid var(--glass-border);
-    border-radius: 8px;
-    backdrop-filter: blur(12px);
-    box-shadow: 0 8px 32px var(--shadow);
+    background: var(--md3-surface);
+    border: 1px solid var(--md3-outline);
+    border-radius: var(--border-radius-md);
+    box-shadow: var(--shadow-md);
   }
   
   /* Waline 自定义样式 */
@@ -146,38 +145,42 @@ const finalPlaceholder = placeholder;
   }
   
   :global(.wl-input) {
-    border: 1px solid var(--glass-border);
-    border-radius: 8px;
-    background: var(--glass-bg);
-    backdrop-filter: blur(12px);
+    border: 1px solid var(--md3-outline);
+    border-radius: var(--border-radius-sm);
+    background: var(--md3-surface);
     transition: all 0.3s cubic-bezier(.4,0,.2,1);
   }
   
   :global(.wl-input:focus) {
-    border-color: var(--bg-primary);
-    box-shadow: 0 0 0 3px rgba(255, 183, 197, 0.2);
+    border-color: var(--md3-primary);
+    box-shadow: 0 0 0 3px var(--md3-primary-container);
   }
   
   :global(.wl-btn) {
-    background: var(--bg-primary);
-    color: white;
+    background: var(--md3-primary);
+    color: var(--md3-on-primary);
     border: none;
-    border-radius: 8px;
+    border-radius: var(--border-radius-sm);
     transition: all 0.3s cubic-bezier(.4,0,.2,1);
   }
   
   :global(.wl-btn:hover) {
-    background: var(--bg-primary);
+    background: var(--md3-primary);
     transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(255, 183, 197, 0.4);
+    box-shadow: 0 8px 20px var(--md3-primary-container);
   }
   
   :global(.wl-comment-item) {
-    background: rgba(255, 255, 255, 0.1);
-    border: 1px solid var(--glass-border);
-    border-radius: 8px;
+    background: var(--md3-surface);
+    border: 1px solid var(--md3-outline);
+    border-radius: var(--border-radius-sm);
     margin-bottom: 1rem;
     padding: 1rem;
+    transition: all 0.3s cubic-bezier(.4,0,.2,1);
+  }
+  
+  :global(.wl-comment-item:hover) {
+    box-shadow: var(--shadow-sm);
   }
   
   /* 响应式设计 */

@@ -1,16 +1,36 @@
 ---
 import { sidebarLayoutConfig } from '../config';
 
+interface SocialLink {
+  name: string;
+  url: string;
+  icon: string;
+}
+
+interface Props {
+  avatar?: string;
+  name?: string;
+  quote?: string;
+  socialLinks?: SocialLink[];
+}
+
+interface ProfileConfig {
+  avatar?: string;
+  name?: string;
+  bio?: string;
+  socialLinks?: SocialLink[];
+}
+
 // 从配置中获取个人资料信息
 const leftSidebarConfig = sidebarLayoutConfig.find(sidebar => sidebar.position === 'left');
-const profileConfig = leftSidebarConfig?.components.find(component => component.name === 'Profile')?.config || {};
+const profileConfig = leftSidebarConfig?.components.find(component => component.name === 'Profile')?.config as ProfileConfig || {};
 
 const {
   avatar = profileConfig.avatar || 'http://q.qlogo.cn/headimg_dl?dst_uin=483165474&spec=640&img_type=jpg',
   name = profileConfig.name || 'XingGreen',
   quote = profileConfig.bio || '人生如梦，不期而遇',
   socialLinks = profileConfig.socialLinks || []
-} = Astro.props;
+} = Astro.props as Props;
 ---
 
 <div class="author-profile">
@@ -23,9 +43,8 @@ const {
     <p class="author-quote">{quote}</p>
     
     <div class="social-links">
-      {socialLinks.map((link, index) => (
+      {socialLinks.map((link) => (
         <a 
-          key={index} 
           href={link.url} 
           class="social-link" 
           aria-label={`访问我的${link.name}主页`}
@@ -46,8 +65,8 @@ const {
 }
 
 .profile-card {
-  background: var(--glass-bg);
-  border: 1px solid var(--glass-border);
+  background: var(--md3-surface);
+  border: 1px solid var(--md3-outline);
   border-radius: 12px;
   padding: 2rem;
   text-align: center;
@@ -61,7 +80,7 @@ const {
   border-radius: 50%;
   overflow: hidden;
   margin: 0 auto 1.5rem;
-  border: 3px solid var(--accent-color);
+  border: 3px solid var(--md3-primary);
 }
 
 .author-avatar {
@@ -95,8 +114,8 @@ const {
   align-items: center;
   gap: 0.5rem;
   padding: 0.5rem 1rem;
-  background: var(--glass-bg);
-  border: 1px solid var(--glass-border);
+  background: var(--md3-surface);
+  border: 1px solid var(--md3-outline);
   border-radius: 8px;
   color: var(--text-primary);
   text-decoration: none;
@@ -105,11 +124,11 @@ const {
 }
 
 .social-link:hover {
-  background: var(--accent-color);
-  color: white;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px var(--shadow);
-}
+    background: var(--md3-primary);
+    color: var(--md3-on-primary);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+  }
 
 .social-link span.material-symbols-outlined {
   font-size: 1.2rem;

@@ -1,11 +1,10 @@
 ---
 import '../assets/styles/global.css';
-import Sidebar from '../components/Sidebar.astro';
 import AuthorProfile from '../components/AuthorProfile.astro';
 import SidebarComponents from '../components/SidebarComponents.astro';
 import RightSidebar from '../components/RightSidebar.astro';
 import { layoutConfig } from '../config';
-import { blogPosts } from '../data/blogPosts';
+import { blogPosts as allBlogPosts } from '../data/blogPosts';
 
 // 博客统计数据
 const blogStats = [
@@ -18,13 +17,13 @@ const blogStats = [
 // 计算统计数据
 blogStats.forEach(stat => {
   if (stat.title === "文章") {
-    stat.value = blogPosts.length;
+    stat.value = allBlogPosts.length;
   } else if (stat.title === "分类") {
-    stat.value = [...new Set(blogPosts.map(post => post.category))].length;
+    stat.value = [...new Set(allBlogPosts.map(post => post.category))].length;
   } else if (stat.title === "标签") {
-    stat.value = [...new Set(blogPosts.flatMap(post => post.tags))].length;
+    stat.value = [...new Set(allBlogPosts.flatMap(post => post.tags))].length;
   } else if (stat.title === "总字数") {
-    stat.value = blogPosts.reduce((acc, post) => acc + post.excerpt.length, 0);
+    stat.value = allBlogPosts.reduce((acc, post) => acc + post.excerpt.length, 0);
   }
 });
 
@@ -42,37 +41,25 @@ const {
 
 // 从配置获取侧边栏位置
 const sidebarPosition = layoutConfig.sidebarPosition;
-const isLeftSidebar = sidebarPosition === 'left';
 ---
 
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
+  <link rel="icon" href="/favicon.png" type="image/png">
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content={description} />
   <title>{title}</title>
-  <!-- 字体加载优化：系统字体优先，web字体作为备选 -->
-  <!-- 方案2: 轻量级web字体备选方案（仅在系统字体不可用时加载） -->
-  <link 
-    rel="preload" 
-    href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;600;700&display=swap&subset=chinese-simplified,latin" 
-    as="style" 
-    onload="this.onload=null;this.rel='stylesheet'" 
-  >
-  <noscript>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;600;700&display=swap&subset=chinese-simplified,latin" rel="stylesheet">
-  </noscript>
-  <!-- 方案3: 更圆润的开源字体备选方案 -->
-  <link 
-    rel="preload" 
-    href="https://fonts.googleapis.com/css2?family=ZCOOL+XiaoWei:wght@400;700&display=swap" 
-    as="style" 
-    onload="this.onload=null;this.rel='stylesheet'" 
-  >
-  <noscript>
-    <link href="https://fonts.googleapis.com/css2?family=ZCOOL+XiaoWei:wght@400;700&display=swap" rel="stylesheet">
-  </noscript>
+  <!-- 预加载主题样式以避免切换闪烁 -->
+  <script is:inline>
+    // 在页面渲染前设置主题，避免闪烁
+    const initialTheme = localStorage.getItem('theme') || 
+                      (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    document.documentElement.setAttribute('data-theme', initialTheme);
+  </script>
+
+
   <!-- Material Symbols -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
 </head>
@@ -89,7 +76,6 @@ const isLeftSidebar = sidebarPosition === 'left';
     <div class="container">
       <div class="nav-content">
         <div class="nav-logo" role="log">
-          <span class="material-symbols-outlined" aria-hidden="true">JLYG</span>
           <h1>{title}</h1>
         </div>
         
@@ -105,8 +91,6 @@ const isLeftSidebar = sidebarPosition === 'left';
         
         <!-- 导航功能按钮容器 -->
         <div class="nav-actions">
-
-          
           <!-- 主题切换按钮 -->
           <button class="theme-toggle-btn" aria-label="切换主题">
             <span class="material-symbols-outlined" aria-hidden="true">light_mode</span>
@@ -124,7 +108,6 @@ const isLeftSidebar = sidebarPosition === 'left';
     <div class="mobile-nav-menu" id="mobile-nav-menu">
       <div class="mobile-nav-header">
         <div class="nav-logo">
-          <span class="material-symbols-outlined" aria-hidden="true">sparkles</span>
           <h1>{title}</h1>
         </div>
         <button class="mobile-close-btn" aria-label="关闭菜单">
@@ -144,60 +127,30 @@ const isLeftSidebar = sidebarPosition === 'left';
   </nav>
   
   <!-- 主内容区域 -->
-  <main class="three-column-layout">
-    <div class="layout-container">
-      <!-- 根据配置动态调整侧边栏位置 -->
-      {isLeftSidebar ? (
-        <>
-          <!-- 左侧边栏 - 支持自定义内容 -->
-          <slot name="left-sidebar">
-            <aside class="left-sidebar">
-              <AuthorProfile 
-                name="XingGreen" 
-                quote="人生如梦，不期而遇" 
-              />
-              <SidebarComponents posts={blogPosts} />
-            </aside>
-          </slot>
-          
-          <!-- 中间内容区 -->
-          <section class="main-content">
-            <slot />
-          </section>
-          
-          <!-- 右侧边栏 - 支持自定义内容 -->
-          <slot name="right-sidebar">
-            <aside class="right-sidebar">
-              <RightSidebar />
-            </aside>
-          </slot>
-        </>
-      ) : (
-        <>
-          <!-- 右侧边栏 - 支持自定义内容 -->
-          <slot name="right-sidebar">
-            <aside class="right-sidebar">
-              <RightSidebar />
-            </aside>
-          </slot>
-          
-          <!-- 中间内容区 -->
-          <section class="main-content">
-            <slot />
-          </section>
-          
-          <!-- 左侧边栏 - 支持自定义内容 -->
-          <slot name="left-sidebar">
-            <aside class="left-sidebar">
-              <AuthorProfile 
-                name="XingGreen" 
-                quote="人生如梦，不期而遇" 
-              />
-              <SidebarComponents posts={blogPosts} />
-            </aside>
-          </slot>
-        </>
-      )}
+  <main class="main-layout">
+    <div class="container">
+      <!-- 左侧边栏 - 支持自定义内容 -->
+      <aside class="sidebar-left">
+        <slot name="left-sidebar">
+          <AuthorProfile 
+            name="XingGreen" 
+            quote="人生如梦，不期而遇" 
+          />
+          <SidebarComponents posts={allBlogPosts} />
+        </slot>
+      </aside>
+      
+      <!-- 中间内容区 -->
+      <section class="content-main">
+        <slot />
+      </section>
+      
+      <!-- 右侧边栏 - 支持自定义内容 -->
+      <aside class="sidebar-right">
+        <slot name="right-sidebar">
+          <RightSidebar />
+        </slot>
+      </aside>
     </div>
   </main>
 
@@ -215,17 +168,29 @@ const isLeftSidebar = sidebarPosition === 'left';
   
 
 
-  <script>
+  <script is:inline define:vars={{ allBlogPosts }}>
     // 确保DOM加载完成后执行JavaScript代码
     document.addEventListener('DOMContentLoaded', () => {
+      // 暴露博客文章数据给全局对象，供搜索组件使用
+      window.blogPosts = allBlogPosts;
       // 主题切换功能
-      const themeToggleBtn = document.querySelector('.theme-toggle-btn');
-      const initialTheme = localStorage.getItem('theme') || 'light';
-      document.documentElement.setAttribute('data-theme', initialTheme);
+        const themeToggleBtn = document.querySelector('.theme-toggle-btn');
+        // 获取当前主题（已在页面头部设置）
+        const currentTheme = document.documentElement.getAttribute('data-theme');
+        
+        // 更新主题切换按钮状态的辅助函数
+        const updateThemeToggleBtn = (theme) => {
+          const icon = themeToggleBtn?.querySelector('.material-symbols-outlined');
+          if (icon) {
+            icon.textContent = theme === 'dark' ? 'dark_mode' : 'light_mode';
+          }
+          if (themeToggleBtn) {
+            themeToggleBtn.classList.toggle('active', theme === 'dark');
+          }
+        };
       
-      if (initialTheme === 'dark') {
-        themeToggleBtn?.querySelector('.material-symbols-outlined')?.setAttribute('textContent', 'dark_mode');
-      }
+        // 初始化主题切换按钮状态
+        updateThemeToggleBtn(currentTheme);
       
       themeToggleBtn?.addEventListener('click', () => {
         const currentTheme = document.documentElement.getAttribute('data-theme');
@@ -234,17 +199,45 @@ const isLeftSidebar = sidebarPosition === 'left';
         document.documentElement.setAttribute('data-theme', newTheme);
         localStorage.setItem('theme', newTheme);
         
-        const icon = themeToggleBtn.querySelector('.material-symbols-outlined');
-        if (icon) {
-          icon.textContent = newTheme === 'dark' ? 'dark_mode' : 'light_mode';
+        updateThemeToggleBtn(newTheme);
+      });
+      
+      // 背景图功能 - 默认启用，但深色模式下禁用
+      const initialBg = localStorage.getItem('has-background') !== 'false';
+      // 使用已经声明的currentTheme变量
+      if (initialBg && currentTheme !== 'dark') {
+        document.body.classList.add('has-background');
+      }
+      localStorage.setItem('has-background', 'true');
+      
+      // 主题切换时管理背景图
+      // 使用已经声明的themeToggleBtn变量
+      themeToggleBtn?.addEventListener('click', () => {
+        const newTheme = document.documentElement.getAttribute('data-theme');
+        if (newTheme === 'dark') {
+          document.body.classList.remove('has-background');
+        } else if (localStorage.getItem('has-background') !== 'false') {
+          document.body.classList.add('has-background');
+        }
+      });
+      
+      // 系统主题变化时管理背景图
+      window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+        if (!localStorage.getItem('theme')) {
+          const newTheme = e.matches ? 'dark' : 'light';
+          if (newTheme === 'dark') {
+            document.body.classList.remove('has-background');
+          } else if (localStorage.getItem('has-background') !== 'false') {
+            document.body.classList.add('has-background');
+          }
         }
       });
       
       // 确保侧边栏在所有页面中都有一致的间距
       const alignSidebars = () => {
         // 移除JavaScript中设置的margin-top，使用CSS统一管理
-        const leftSidebar = document.querySelector('.left-sidebar') as HTMLElement;
-        const rightSidebar = document.querySelector('.right-sidebar') as HTMLElement;
+        const leftSidebar = document.querySelector('.sidebar-left');
+        const rightSidebar = document.querySelector('.sidebar-right');
         
         if (leftSidebar) {
           leftSidebar.style.marginTop = '';
@@ -273,9 +266,9 @@ const isLeftSidebar = sidebarPosition === 'left';
 
       // 平滑滚动
       document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', (e: Event) => {
+        anchor.addEventListener('click', (e) => {
           e.preventDefault();
-          const currentTarget = e.currentTarget as HTMLAnchorElement;
+          const currentTarget = e.currentTarget;
           const href = currentTarget.getAttribute('href');
           if (href) {
             const target = document.querySelector(href);
@@ -287,6 +280,16 @@ const isLeftSidebar = sidebarPosition === 'left';
             }
           }
         });
+      });
+      
+      // 监听系统主题变化
+      window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+        // 只有当用户没有明确设置主题时，才自动跟随系统主题
+        if (!localStorage.getItem('theme')) {
+          const newTheme = e.matches ? 'dark' : 'light';
+          document.documentElement.setAttribute('data-theme', newTheme);
+          updateThemeToggleBtn(newTheme);
+        }
       });
 
       // 移动端菜单
@@ -395,9 +398,6 @@ const isLeftSidebar = sidebarPosition === 'left';
 
 
     });
-
-    // 暴露博客文章数据给全局对象，供搜索组件使用
-    window.blogPosts = blogPosts;
   </script>
 </body>
 </html>

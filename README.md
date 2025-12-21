@@ -1,6 +1,6 @@
 # XingGreen Blog
 
-一个基于 Astro 框架构建的现代化个人博客，采用动漫背景，提供优雅的阅读体验。
+一个基于 Astro 框架构建的现代化个人博客，采用 Material Design 3 设计风格和动漫背景，提供优雅的阅读体验。
 
 ## 特性
 
@@ -25,8 +25,8 @@
 
 1. 克隆项目
 ```bash
-git clone <repository-url>
-cd Blog
+git clone https://github.com/XingGreen/XingGreen-blog.git
+cd XingGreen-blog
 ```
 
 2. 安装依赖
@@ -43,7 +43,7 @@ npm run dev
 ```
 http://localhost:4321
 ```
-## 博客的风格设计我参考了mizuki二次元动漫博客和vahiru博客
+## 博客的风格设计我参考了mizuki二次元动漫博客和vahiru博客的设计风格，同时加入了自己的个人风格。
 
 ##  项目结构
 
@@ -203,9 +203,8 @@ MIT License
 ##  联系方式
 
 - GitHub: [XingGreen](https://github.com/XingGreen)
-- Bilibili: [XingGreen](https://space.bilibili.com/1342082835)
-
+- Bilibili: [记忆_瞬间的永恒](https://space.bilibili.com/1342082835)
+- QQ: 483165474
 ---
-
 
 

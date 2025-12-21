@@ -49,23 +49,8 @@ const isSearchEnabled = featureConfig.search.enabled;
         slug: string;
       }
 
-      // 扩展Window接口
-      declare global {
-        interface Window {
-          blogPosts?: BlogPost[];
-        }
-      }
-
-      // 搜索配置
-      const searchConfig = {
-        keys: ['title', 'excerpt', 'tags', 'category'],
-        threshold: 0.3,
-        includeMatches: true,
-        minMatchCharLength: 2
-      };
-
       // 获取搜索元素
-      const searchInput = document.getElementById('search-input');
+      const searchInput = document.getElementById('search-input') as HTMLInputElement;
       const searchBtn = document.querySelector('.search-btn');
       const searchResults = document.getElementById('search-results');
 
@@ -134,8 +119,8 @@ const isSearchEnabled = featureConfig.search.enabled;
         let blogPosts: BlogPost[] = [];
         
         // 从全局变量获取文章数据（需要在页面中定义）
-        if (window.blogPosts) {
-          blogPosts = window.blogPosts;
+        if ((window as any).blogPosts) {
+          blogPosts = (window as any).blogPosts;
         }
         
         // 监听输入事件
