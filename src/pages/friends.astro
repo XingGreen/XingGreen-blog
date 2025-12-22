@@ -1,18 +1,12 @@
 ---
 import MainLayout from '../layouts/MainLayout.astro';
+import { friendsConfig } from '../config';
 
 const title = '友情链接';
 const description = 'XingGreen Blog的友情链接';
 
-// 友链数据
-const friends = [
-  {
-    name: 'vahiru的博客',
-    url: 'https://vahiru.is-cute.cat',
-    description: '这是vahiru的博客',
-    avatar: 'https://via.placeholder.com/80'
-  },
-];
+// 友链数据 - 使用集中配置
+const friends = friendsConfig;
 ---
 
 <MainLayout title={title} description={description}>

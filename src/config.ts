@@ -9,7 +9,14 @@ export const siteConfig = {
   siteUrl: 'http://localhost:4323', // 站点地址
   language: 'zh-CN',
   timezone: 'Asia/Shanghai',
-  favicon: '/favicon.ico',
+  favicon: '/favicon.png',
+  // 导航菜单配置
+  navMenu: [
+    { name: '主页', href: '/', ariaLabel: '前往主页' },
+    { name: '归档', href: '/blog', ariaLabel: '查看文章归档' },
+    { name: '友链', href: '/friends', ariaLabel: '查看友情链接' },
+    { name: '联系我', href: '/contact', ariaLabel: '联系博客作者' },
+  ],
 };
 
 // 主题设置
@@ -140,7 +147,15 @@ export const featureConfig = {
     enabled: false,
     provider: 'waline', // waline/giscus/utterances
     config: {
-      serverURL: '',
+      serverURL: 'https://waline.vercel.app',
+      placeholder: '留下你的评论吧~',
+      requiredMeta: ['nick', 'mail'],
+      login: 'enable',
+      pageSize: 10,
+      emoji: [
+        'https://cdn.jsdelivr.net/npm/@waline/emojis@1.0.1/weibo/index.json',
+        'https://cdn.jsdelivr.net/npm/@waline/emojis@1.0.1/alus/index.json'
+      ],
     },
   },
   // 阅读时间估算
@@ -168,6 +183,16 @@ export const featureConfig = {
   },
 };
 
+// 友链配置
+export const friendsConfig = [
+  {
+    name: 'vahiru的博客',
+    url: 'https://vahiru.is-cute.cat',
+    description: '这是vahiru的博客',
+    avatar: 'https://via.placeholder.com/80'
+  },
+];
+
 // 导出所有配置
 export default {
   siteConfig,
@@ -175,4 +200,5 @@ export default {
   layoutConfig,
   sidebarLayoutConfig,
   featureConfig,
+  friendsConfig,
 };

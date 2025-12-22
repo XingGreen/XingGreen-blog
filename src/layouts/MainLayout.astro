@@ -3,30 +3,11 @@ import '../assets/styles/global.css';
 import AuthorProfile from '../components/AuthorProfile.astro';
 import SidebarComponents from '../components/SidebarComponents.astro';
 import RightSidebar from '../components/RightSidebar.astro';
-import MusicPlayer from '../components/MusicPlayer.astro';
-import { layoutConfig } from '../config';
+
 import { blogPosts as allBlogPosts } from '../data/blogPosts';
+import { siteConfig } from '../config';
 
-// 博客统计数据
-const blogStats = [
-  { title: "文章", value: 0, icon: "article", color: "rgba(103, 80, 164, 0.8)" },
-  { title: "分类", value: 0, icon: "category", color: "rgba(98, 91, 113, 0.8)" },
-  { title: "标签", value: 0, icon: "label", color: "rgba(125, 82, 96, 0.8)" },
-  { title: "总字数", value: 0, icon: "text_fields", color: "rgba(40, 205, 197, 0.8)" }
-];
 
-// 计算统计数据
-blogStats.forEach(stat => {
-  if (stat.title === "文章") {
-    stat.value = allBlogPosts.length;
-  } else if (stat.title === "分类") {
-    stat.value = [...new Set(allBlogPosts.map(post => post.category))].length;
-  } else if (stat.title === "标签") {
-    stat.value = [...new Set(allBlogPosts.flatMap(post => post.tags))].length;
-  } else if (stat.title === "总字数") {
-    stat.value = allBlogPosts.reduce((acc, post) => acc + post.excerpt.length, 0);
-  }
-});
 
 interface Props {
   title?: string;
@@ -35,13 +16,12 @@ interface Props {
 }
 
 const {
-  title = 'XingGreen Blog',
-  description = 'A beautiful Astro blog with Material Design 3 and anime background',
+  title = siteConfig.title,
+  description = siteConfig.description,
   class: bodyClass = ''
 } = Astro.props;
 
-// 从配置获取侧边栏位置
-const sidebarPosition = layoutConfig.sidebarPosition;
+
 ---
 
 <!DOCTYPE html>
@@ -84,10 +64,9 @@ const sidebarPosition = layoutConfig.sidebarPosition;
         
         <!-- 桌面导航菜单 -->
         <ul class="nav-menu">
-          <li><a href="/" aria-label="前往主页">主页</a></li>
-          <li><a href="/blog" aria-label="查看文章归档">归档</a></li>
-          <li><a href="/friends" aria-label="查看友情链接">友链</a></li>
-          <li><a href="/contact" aria-label="联系博客作者">联系我</a></li>
+          {siteConfig.navMenu.map((item) => (
+            <li><a href={item.href} aria-label={item.ariaLabel}>{item.name}</a></li>
+          ))}
         </ul>
         
         <!-- 导航功能按钮容器 -->
@@ -222,18 +201,6 @@ const sidebarPosition = layoutConfig.sidebarPosition;
         }
       });
       
-      // 系统主题变化时管理背景图
-      window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
-        if (!localStorage.getItem('theme')) {
-          const newTheme = e.matches ? 'dark' : 'light';
-          if (newTheme === 'dark') {
-            document.body.classList.remove('has-background');
-          } else if (localStorage.getItem('has-background') !== 'false') {
-            document.body.classList.add('has-background');
-          }
-        }
-      });
-      
       // 确保侧边栏在所有页面中都有一致的间距
       const alignSidebars = () => {
         // 移除JavaScript中设置的margin-top，使用CSS统一管理
@@ -290,6 +257,12 @@ const sidebarPosition = layoutConfig.sidebarPosition;
           const newTheme = e.matches ? 'dark' : 'light';
           document.documentElement.setAttribute('data-theme', newTheme);
           updateThemeToggleBtn(newTheme);
+          // 同时管理背景图
+          if (newTheme === 'dark') {
+            document.body.classList.remove('has-background');
+          } else if (localStorage.getItem('has-background') !== 'false') {
+            document.body.classList.add('has-background');
+          }
         }
       });
 
@@ -401,8 +374,7 @@ const sidebarPosition = layoutConfig.sidebarPosition;
     });
   </script>
   
-  <!-- 音乐播放器组件 -->
-  <MusicPlayer />
+  
   
   <!-- Live2D猫 -->
   <div id="live2d-cat" class="live2d-cat">

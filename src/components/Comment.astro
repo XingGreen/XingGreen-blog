@@ -1,18 +1,21 @@
 ---
+import { featureConfig } from '../config';
+
 interface Props {
   path?: string;
-  placeholder?: string;
-  serverURL?: string;
 }
 
 const {
-  placeholder = '留下你的评论吧~',
-  serverURL = 'https://waline.vercel.app'
+  path,
 } = Astro.props;
 
-// 定义默认配置
-const finalServerURL = serverURL;
-const finalPlaceholder = placeholder;
+// 使用集中配置的评论系统设置
+const finalServerURL = featureConfig.comment.config.serverURL;
+const finalPlaceholder = featureConfig.comment.config.placeholder;
+const requiredMeta = featureConfig.comment.config.requiredMeta;
+const login = featureConfig.comment.config.login;
+const pageSize = featureConfig.comment.config.pageSize;
+const emoji = featureConfig.comment.config.emoji;
 ---
 
 <div class="comments-section">
@@ -25,7 +28,7 @@ const finalPlaceholder = placeholder;
   </div>
 </div>
 
-<script define:vars={{ finalServerURL, finalPlaceholder }} is:inline>
+<script define:vars={{ finalServerURL, finalPlaceholder, requiredMeta, login, pageSize, emoji }} is:inline>
   // 集成 Waline 评论系统
   import { init } from '@waline/client';
   import '@waline/client/dist/waline.css';
@@ -42,13 +45,10 @@ const finalPlaceholder = placeholder;
     serverURL: finalServerURL,
     path: window.location.pathname,
     lang: 'zh-CN',
-    requiredMeta: ['nick', 'mail'],
-    login: 'enable',
-    pageSize: 10,
-    emoji: [
-      'https://cdn.jsdelivr.net/npm/@waline/emojis@1.0.1/weibo/index.json',
-      'https://cdn.jsdelivr.net/npm/@waline/emojis@1.0.1/alus/index.json'
-    ],
+    requiredMeta: requiredMeta,
+    login: login,
+    pageSize: pageSize,
+    emoji: emoji,
     dark: getCurrentTheme() === 'dark' ? 'auto' : 'light'
   });
   
