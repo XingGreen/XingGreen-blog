@@ -403,5 +403,149 @@ const sidebarPosition = layoutConfig.sidebarPosition;
   
   <!-- 音乐播放器组件 -->
   <MusicPlayer />
+  
+  <!-- Live2D猫 -->
+  <div id="live2d-cat" class="live2d-cat">
+    <img src="/images/live2d/cat.svg" alt="Live2D猫" class="cat-image" />
+    <div class="cat-message" id="cat-message"></div>
+  </div>
+  
+  <script>
+    // 确保DOM加载完成后执行
+    document.addEventListener('DOMContentLoaded', () => {
+      const cat = document.getElementById('live2d-cat');
+      const catMessage = document.getElementById('cat-message');
+      
+      // 随机傲娇语录
+      const tsundereMessages = [
+        "哼，才不是特意给你看的呢！",
+        "干嘛一直盯着人家看啦！",
+        "你...你该不会喜欢我吧？",
+        "笨蛋，别碰我啦！",
+        "我...我只是刚好路过而已！",
+        "讨厌啦，人家才不开心呢！",
+        "谁要理你啊！",
+        "你这个大笨蛋！",
+        "哼，别以为我会感激你！",
+        "我才不是想让你开心呢！"
+      ];
+      
+      // 点击显示随机傲娇语录
+      cat.addEventListener('click', () => {
+        const randomMessage = tsundereMessages[Math.floor(Math.random() * tsundereMessages.length)];
+        catMessage.textContent = randomMessage;
+        catMessage.classList.add('show');
+        
+        // 10秒后隐藏消息
+        setTimeout(() => {
+          catMessage.classList.remove('show');
+        }, 10000);
+      });
+      
+      // 拖拽功能
+      let isDragging = false;
+      let offsetX, offsetY;
+      
+      cat.addEventListener('mousedown', (e) => {
+        isDragging = true;
+        offsetX = e.clientX - cat.getBoundingClientRect().left;
+        offsetY = e.clientY - cat.getBoundingClientRect().top;
+        cat.style.cursor = 'grabbing';
+      });
+      
+      document.addEventListener('mousemove', (e) => {
+        if (!isDragging) return;
+        
+        const x = e.clientX - offsetX;
+        const y = e.clientY - offsetY;
+        
+        // 确保猫不会超出窗口边界
+        const maxX = window.innerWidth - cat.offsetWidth;
+        const maxY = window.innerHeight - cat.offsetHeight;
+        
+        const finalX = Math.max(0, Math.min(x, maxX));
+        const finalY = Math.max(0, Math.min(y, maxY));
+        
+        cat.style.left = finalX + 'px';
+        cat.style.top = finalY + 'px';
+      });
+      
+      document.addEventListener('mouseup', () => {
+        isDragging = false;
+        cat.style.cursor = 'grab';
+      });
+    });
+  </script>
+  
+  <style>
+    .live2d-cat {
+      position: fixed;
+      bottom: 20px;
+      left: 20px;
+      z-index: 1000;
+      cursor: grab;
+      width: 150px;
+      height: 150px;
+    }
+    
+    .live2d-cat:active {
+      cursor: grabbing;
+    }
+    
+    .cat-image {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+    
+    .cat-message {
+      position: absolute;
+      bottom: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(255, 255, 255, 0.9);
+      color: #333;
+      padding: 10px 15px;
+      border-radius: 15px;
+      margin-bottom: 10px;
+      font-size: 14px;
+      max-width: 200px;
+      text-align: center;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      pointer-events: none;
+    }
+    
+    .cat-message::after {
+      content: '';
+      position: absolute;
+      bottom: -5px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 0;
+      height: 0;
+      border-left: 5px solid transparent;
+      border-right: 5px solid transparent;
+      border-top: 5px solid rgba(255, 255, 255, 0.9);
+    }
+    
+    .cat-message.show {
+      opacity: 1;
+    }
+    
+    /* 响应式调整 */
+    @media (max-width: 768px) {
+      .live2d-cat {
+        width: 120px;
+        height: 120px;
+      }
+      
+      .cat-message {
+        max-width: 150px;
+        font-size: 12px;
+      }
+    }
+  </style>
 </body>
 </html>

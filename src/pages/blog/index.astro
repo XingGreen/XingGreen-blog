@@ -39,6 +39,10 @@ blogPosts.sort((a, b) => {
     <div class="container">
       <h2 class="section-title">博客归档</h2>
       <p class="section-description">这里是{title}的所有博客文章，共{blogPosts.length}篇。</p>
+      <button id="add-post-btn" class="add-post-btn">
+        <span class="material-symbols-outlined">add</span>
+        添加新文章
+      </button>
       <div id="blog-container" class="blog-grid">
         {blogPosts.map(post => (
           <a href={`/blog/${post.slug}`} class="card ${(post.data.pin && (!post.data.expiryDate || new Date(post.data.expiryDate) > new Date())) ? 'pinned' : ''}" aria-label={`阅读文章：${post.data.title}`}>
@@ -75,6 +79,181 @@ blogPosts.sort((a, b) => {
       </div>
     </div>
   </section>
+  <!-- 编辑器模态框 -->
+  <div id="editor-modal" class="editor-modal">
+    <div class="editor-modal-content">
+      <div class="editor-header">
+        <h3>编写新文章</h3>
+        <button id="close-editor" class="close-btn">
+          <span class="material-symbols-outlined">close</span>
+        </button>
+      </div>
+      <div class="editor-body">
+        <form id="post-form" class="post-form">
+          <div class="form-group">
+            <label for="post-title">标题</label>
+            <input type="text" id="post-title" name="title" required placeholder="请输入文章标题">
+          </div>
+          <div class="form-group">
+            <label for="post-excerpt">摘要</label>
+            <textarea id="post-excerpt" name="excerpt" rows="3" required placeholder="请输入文章摘要"></textarea>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="post-category">分类</label>
+              <input type="text" id="post-category" name="category" required placeholder="请输入文章分类">
+            </div>
+            <div class="form-group">
+              <label for="post-author">作者</label>
+              <input type="text" id="post-author" name="author" required placeholder="请输入作者姓名">
+            </div>
+            <div class="form-group">
+              <label for="post-tags">标签（用逗号分隔）</label>
+              <input type="text" id="post-tags" name="tags" placeholder="请输入文章标签，用逗号分隔">
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="post-content">内容</label>
+            <textarea id="post-content" name="content" placeholder="请输入文章内容（支持Markdown格式）"></textarea>
+          </div>
+          <div class="editor-footer">
+            <button type="submit" class="save-btn">保存文章</button>
+            <button type="button" id="export-btn" class="export-btn">导出Markdown</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- 引入SimpleMDE CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/simplemde@1.11.2/dist/simplemde.min.css">
+
+  <!-- 引入jQuery和SimpleMDE JS -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/simplemde@1.11.2/dist/simplemde.min.js"></script>
+
+  <script>
+    // 初始化编辑器
+    let simplemde;
+    
+    // 页面加载完成后初始化
+    document.addEventListener('DOMContentLoaded', function() {
+      // 初始化SimpleMDE编辑器
+      simplemde = new SimpleMDE({
+        element: document.getElementById('post-content'),
+        toolbar: [
+          'bold', 'italic', 'heading', '|',
+          'quote', 'code', 'table', 'horizontal-rule', '|',
+          'unordered-list', 'ordered-list', '|',
+          'link', 'image', '|',
+          'preview', 'side-by-side', 'fullscreen', '|',
+          'guide'
+        ],
+        spellChecker: false,
+        placeholder: '请输入文章内容（支持Markdown格式）'
+      });
+      
+      // 获取元素
+      const addPostBtn = document.getElementById('add-post-btn');
+      const editorModal = document.getElementById('editor-modal');
+      const closeEditor = document.getElementById('close-editor');
+      const postForm = document.getElementById('post-form');
+      const exportBtn = document.getElementById('export-btn');
+      
+      // 打开编辑器
+      addPostBtn.addEventListener('click', function() {
+        editorModal.style.display = 'flex';
+        // 聚焦到标题输入框
+        document.getElementById('post-title').focus();
+      });
+      
+      // 关闭编辑器
+      closeEditor.addEventListener('click', function() {
+        editorModal.style.display = 'none';
+        // 重置表单
+        postForm.reset();
+        simplemde.value('');
+      });
+      
+      // 点击模态框外部关闭
+      window.addEventListener('click', function(event) {
+        if (event.target == editorModal) {
+          editorModal.style.display = 'none';
+          // 重置表单
+          postForm.reset();
+          simplemde.value('');
+        }
+      });
+      
+      // 导出Markdown
+      exportBtn.addEventListener('click', function() {
+        const title = document.getElementById('post-title').value;
+        const excerpt = document.getElementById('post-excerpt').value;
+        const category = document.getElementById('post-category').value;
+        const author = document.getElementById('post-author').value;
+        const tagsInput = document.getElementById('post-tags').value;
+        const tags = tagsInput.split(',').map(tag => tag.trim()).filter(tag => tag);
+        const content = simplemde.value();
+        
+        // 创建Markdown内容（包括Frontmatter）
+        const frontmatter = `---
+title: "${title}"
+excerpt: "${excerpt}"
+date: "${new Date().toISOString().split('T')[0]}"
+category: "${category}"
+tags: [${tags.map(tag => `"${tag}"`).join(', ')}]
+author: "${author}"
+pin: false
+priority: 1
+---
+
+${content}`;
+        
+        // 创建下载链接
+        const blob = new Blob([frontmatter], { type: 'text/markdown' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `${title.replace(/\s+/g, '-').toLowerCase()}.md`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+      });
+      
+      // 保存文章（这里只是演示，实际项目需要后端API）
+      postForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        // 获取表单数据
+        const formData = new FormData(postForm);
+        const content = simplemde.value();
+        
+        // 创建文章对象
+        const post = {
+          title: formData.get('title'),
+          excerpt: formData.get('excerpt'),
+          category: formData.get('category'),
+          author: formData.get('author'),
+          tags: formData.get('tags').split(',').map(tag => tag.trim()).filter(tag => tag),
+          content: content,
+          date: new Date().toISOString().split('T')[0]
+        };
+        
+        // 这里可以添加保存到后端的逻辑
+        console.log('文章数据:', post);
+        
+        // 显示成功消息
+        alert('文章保存成功！');
+        
+        // 关闭编辑器并重置表单
+        editorModal.style.display = 'none';
+        postForm.reset();
+        simplemde.value('');
+      });
+    });
+  </script>
+
 </MainLayout>
 
 <style>
@@ -354,5 +533,244 @@ blogPosts.sort((a, b) => {
   font-family: 'Material Symbols Outlined', sans-serif;
   font-size: 1rem;
   color: var(--md3-on-surface-variant);
+}
+
+/* 添加新文章按钮样式 */
+.add-post-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  background: linear-gradient(90deg, var(--bg-primary), var(--bg-secondary));
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin: 0 auto 2rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.add-post-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+}
+
+.add-post-btn .material-symbols-outlined {
+  font-size: 1.25rem;
+  color: white;
+}
+
+/* 编辑器模态框样式 */
+.editor-modal {
+  display: none;
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  justify-content: center;
+  align-items: center;
+  padding: 1rem;
+}
+
+.editor-modal-content {
+  background-color: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: 12px;
+  width: 100%;
+  max-width: 1000px;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.editor-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem;
+  border-bottom: 1px solid var(--glass-border);
+}
+
+.editor-header h3 {
+  margin: 0;
+  font-size: 1.5rem;
+  color: var(--md3-on-surface);
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
+}
+
+.close-btn:hover {
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+.close-btn .material-symbols-outlined {
+  font-size: 1.5rem;
+  color: var(--md3-on-surface-variant);
+}
+
+.editor-body {
+  padding: 1.5rem;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.post-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
+}
+
+.form-group label {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--md3-on-surface);
+}
+
+.form-group input,
+.form-group textarea {
+  padding: 0.75rem;
+  border: 1px solid var(--glass-border);
+  border-radius: 8px;
+  background-color: rgba(255, 255, 255, 0.1);
+  color: var(--md3-on-surface);
+  font-size: 1rem;
+  transition: border-color 0.2s ease;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: var(--bg-primary);
+}
+
+/* SimpleMDE编辑器样式调整 */
+.CodeMirror {
+  min-height: 300px;
+  border: 1px solid var(--glass-border);
+  border-radius: 8px;
+  background-color: rgba(255, 255, 255, 0.1);
+  color: var(--md3-on-surface);
+}
+
+.CodeMirror-gutters {
+  background-color: rgba(255, 255, 255, 0.05);
+  border-right: 1px solid var(--glass-border);
+}
+
+.CodeMirror-linenumbers {
+  color: var(--md3-on-surface-variant);
+}
+
+.editor-toolbar {
+  border: 1px solid var(--glass-border);
+  border-bottom: none;
+  border-radius: 8px 8px 0 0;
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+.editor-toolbar button {
+  color: var(--md3-on-surface-variant);
+}
+
+.editor-toolbar button.active {
+  background-color: rgba(0, 0, 0, 0.1);
+  border-color: var(--bg-primary);
+  color: var(--bg-primary);
+}
+
+.editor-toolbar button:hover {
+  background-color: rgba(0, 0, 0, 0.15);
+}
+
+.editor-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  padding: 1.5rem;
+  border-top: 1px solid var(--glass-border);
+}
+
+.save-btn,
+.export-btn {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.save-btn {
+  background: linear-gradient(90deg, var(--bg-primary), var(--bg-secondary));
+  color: white;
+}
+
+.export-btn {
+  background-color: var(--md3-surface-variant);
+  color: var(--md3-on-surface-variant);
+}
+
+.save-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.export-btn:hover {
+  background-color: var(--md3-on-surface-variant);
+  color: var(--md3-surface-variant);
+}
+
+/* 响应式调整 */
+@media (max-width: 768px) {
+  .editor-modal-content {
+    max-height: 95vh;
+  }
+  
+  .editor-header,
+  .editor-body,
+  .editor-footer {
+    padding: 1rem;
+  }
+  
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+  
+  .editor-footer {
+    flex-direction: column;
+  }
+  
+  .save-btn,
+  .export-btn {
+    width: 100%;
+  }
 }
 </style>
