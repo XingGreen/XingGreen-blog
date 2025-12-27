@@ -1,0 +1,271 @@
+---
+import { getCollection } from 'astro:content';
+
+// 获取所有博客文章
+const blogPosts = await getCollection('blog');
+
+// 处理文章数据，生成活动概览数据
+const processBlogData = () => {
+  // 1. 发布频率统计（按月份）
+  const postFrequency = {};
+  
+  // 2. 分类统计
+  const categoryStats = {};
+  
+  // 3. 标签热度统计
+  const tagStats = {};
+  
+  // 处理每篇文章
+  blogPosts.forEach(post => {
+    const postDate = new Date(post.data.date);
+    
+    // 格式化日期为 YYYY-MM 格式
+    const dateKey = `${postDate.getFullYear()}-${String(postDate.getMonth() + 1).padStart(2, '0')}`;
+    
+    // 更新发布频率
+    if (!postFrequency[dateKey]) {
+      postFrequency[dateKey] = 0;
+    }
+    postFrequency[dateKey]++;
+    
+    // 更新分类统计
+    const category = post.data.category;
+    if (!categoryStats[category]) {
+      categoryStats[category] = 0;
+    }
+    categoryStats[category]++;
+    
+    // 更新标签统计
+    const tags = post.data.tags || [];
+    tags.forEach(tag => {
+      if (!tagStats[tag]) {
+        tagStats[tag] = 0;
+      }
+      tagStats[tag]++;
+    });
+  });
+  
+  // 转换为图表友好的格式
+  const chartData = {
+    // 发布频率数据
+    postFrequency: Object.entries(postFrequency)
+      .sort(([dateA], [dateB]) => dateA.localeCompare(dateB))
+      .slice(-12) // 只显示最近12个月
+      .map(([date, count]) => ({
+        date,
+        count
+      })),
+    
+    // 分类数据
+    categories: Object.entries(categoryStats)
+      .sort(([, countA], [, countB]) => countB - countA),
+    
+    // 标签数据（只显示前10个）
+    tags: Object.entries(tagStats)
+      .sort(([, countA], [, countB]) => countB - countA)
+      .slice(0, 10)
+  };
+  
+  return chartData;
+};
+
+const activityData = processBlogData();
+---
+
+<div class="sidebar-card activity-overview-card">
+  <h3 class="sidebar-title">
+    <span class="material-symbols-outlined">insights</span>
+    博客活动概览
+  </h3>
+  
+  <!-- 发布频率图表 -->
+  <div class="chart-container">
+    <h4>最近12个月发布频率</h4>
+    <canvas id="post-frequency-chart" class="activity-chart"></canvas>
+  </div>
+  
+  <!-- 分类分布 -->
+  <div class="chart-container">
+    <h4>分类分布</h4>
+    <canvas id="category-chart" class="activity-chart"></canvas>
+  </div>
+</div>
+
+<!-- 引入 Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script is:inline define:vars={{ activityData }}>
+  // 确保DOM加载完成后执行
+  document.addEventListener('DOMContentLoaded', () => {
+    // 设置图表主题颜色
+    const theme = document.documentElement.getAttribute('data-theme') || 'light';
+    const colors = {
+      primary: theme === 'dark' ? '#4ade80' : '#16a34a',
+      secondary: theme === 'dark' ? '#60a5fa' : '#2563eb',
+      background: theme === 'dark' ? '#1e293b' : '#f8fafc',
+      text: theme === 'dark' ? '#f1f5f9' : '#1e293b',
+      grid: theme === 'dark' ? '#334155' : '#e2e8f0'
+    };
+    
+    // 1. 创建发布频率图表
+    const frequencyCtx = document.getElementById('post-frequency-chart');
+    if (frequencyCtx) {
+      new Chart(frequencyCtx, {
+        type: 'line',
+        data: {
+          labels: activityData.postFrequency.map(item => item.date),
+          datasets: [{
+            label: '发布文章数',
+            data: activityData.postFrequency.map(item => item.count),
+            borderColor: colors.primary,
+            backgroundColor: `${colors.primary}20`,
+            borderWidth: 2,
+            fill: true,
+            tension: 0.4,
+            pointRadius: 4,
+            pointHoverRadius: 6,
+            pointBackgroundColor: colors.primary,
+            pointBorderColor: colors.background
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              display: false
+            },
+            tooltip: {
+              mode: 'index',
+              intersect: false
+            }
+          },
+          scales: {
+            x: {
+              grid: {
+                color: colors.grid
+              },
+              ticks: {
+                color: colors.text
+              }
+            },
+            y: {
+              beginAtZero: true,
+              grid: {
+                color: colors.grid
+              },
+              ticks: {
+                color: colors.text,
+                stepSize: 1
+              }
+            }
+          },
+          interaction: {
+            mode: 'nearest',
+            axis: 'x',
+            intersect: false
+          }
+        }
+      });
+    }
+    
+    // 2. 创建分类分布图表
+    const categoryCtx = document.getElementById('category-chart');
+    if (categoryCtx) {
+      new Chart(categoryCtx, {
+        type: 'doughnut',
+        data: {
+          labels: activityData.categories.map(([category]) => category),
+          datasets: [{
+            data: activityData.categories.map(([, count]) => count),
+            backgroundColor: [
+              colors.primary,
+              colors.secondary,
+              '#facc15',
+              '#f87171',
+              '#c084fc',
+              '#60a5fa',
+              '#14b8a6',
+              '#f97316'
+            ],
+            borderWidth: 2,
+            borderColor: colors.background
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              position: 'bottom',
+              labels: {
+                color: colors.text,
+                font: {
+                  size: 10
+                },
+                padding: 10
+              }
+            },
+            tooltip: {
+              callbacks: {
+                label: function(context) {
+                  const label = context.label || '';
+                  const value = context.raw || 0;
+                  const total = context.dataset.data.reduce((acc, val) => acc + val, 0);
+                  const percentage = Math.round((value / total) * 100);
+                  return `${label}: ${value}篇 (${percentage}%)`;
+                }
+              }
+            }
+          }
+        }
+      });
+    }
+    
+    // 监听主题变化，更新图表颜色
+    const themeToggleBtn = document.querySelector('.theme-toggle-btn');
+    if (themeToggleBtn) {
+      themeToggleBtn.addEventListener('click', () => {
+        window.location.reload(); // 简单的方式：重新加载页面以更新图表主题
+      });
+    }
+  });
+</script>
+
+<style scoped>
+.activity-overview-card {
+  background: var(--md3-surface);
+  border: 1px solid var(--md3-outline);
+  border-radius: var(--border-radius-md);
+  padding: 1.5rem;
+  box-shadow: var(--shadow-sm);
+  transition: var(--transition);
+}
+
+.activity-overview-card:hover {
+  box-shadow: var(--shadow-md);
+}
+
+.chart-container {
+  margin-top: 1.5rem;
+}
+
+.chart-container h4 {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--md3-on-surface);
+  margin-bottom: 1rem;
+}
+
+.activity-chart {
+  height: 180px !important;
+  width: 100% !important;
+}
+
+/* 响应式调整 */
+@media (max-width: 768px) {
+  .activity-chart {
+    height: 150px !important;
+  }
+}
+</style>

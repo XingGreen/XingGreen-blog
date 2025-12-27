@@ -1,4 +1,6 @@
 ---
+import BlogActivityOverview from './BlogActivityOverview.astro';
+
 interface Props {
   // 可以根据实际需要添加属性
 }
@@ -123,6 +125,9 @@ for (let i = 1; i <= daysInMonth; i++) {
       </div>
     </div>
   </div>
+
+  <!-- 活动概览组件 -->
+  <BlogActivityOverview />
 </div>
 
 <script is:inline>
