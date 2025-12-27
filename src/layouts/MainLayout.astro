@@ -3,6 +3,7 @@ import '../assets/styles/global.css';
 import AuthorProfile from '../components/AuthorProfile.astro';
 import SidebarComponents from '../components/SidebarComponents.astro';
 import RightSidebar from '../components/RightSidebar.astro';
+import FloatingMusicPlayer from '../components/FloatingMusicPlayer.astro';
 
 import { blogPosts as allBlogPosts } from '../data/blogPosts';
 import { siteConfig } from '../config';
@@ -41,6 +42,11 @@ const {
   </script>
 
 
+  <!-- Google Fonts - Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" crossorigin="anonymous">
+  
   <!-- Material Symbols -->
   <link rel="stylesheet" href="/material-symbols/outlined.css" />
 </head>
@@ -60,8 +66,6 @@ const {
           <h1>{title}</h1>
         </div>
         
-
-        
         <!-- 桌面导航菜单 -->
         <ul class="nav-menu">
           {siteConfig.navMenu.map((item) => (
@@ -72,12 +76,17 @@ const {
         <!-- 导航功能按钮容器 -->
         <div class="nav-actions">
           <!-- 主题切换按钮 -->
-          <button class="theme-toggle-btn" aria-label="切换主题">
+          <button class="theme-toggle-btn ripple" aria-label="切换主题">
             <span class="material-symbols-outlined" aria-hidden="true">light_mode</span>
           </button>
           
+          <!-- 音乐播放器按钮 -->
+          <button class="music-player-btn ripple" id="music-player-btn" aria-label="打开音乐播放器">
+            <span class="material-symbols-outlined" aria-hidden="true">music_note</span>
+          </button>
+          
           <!-- 移动端菜单按钮 -->
-          <button class="mobile-menu-btn" aria-expanded="false" aria-controls="mobile-nav-menu" aria-label="打开菜单">
+          <button class="mobile-menu-btn ripple" aria-expanded="false" aria-controls="mobile-nav-menu" aria-label="打开菜单">
             <span class="material-symbols-outlined" aria-hidden="true">menu</span>
           </button>
         </div>
@@ -87,15 +96,13 @@ const {
     <!-- 移动端导航菜单 -->
     <div class="mobile-nav-menu" id="mobile-nav-menu">
       <div class="mobile-nav-header">
-        <div class="nav-logo">
-          <h1>{title}</h1>
+          <div class="nav-logo">
+            <h1>{title}</h1>
+          </div>
+          <button class="mobile-close-btn ripple" aria-label="关闭菜单">
+            <span class="material-symbols-outlined" aria-hidden="true">close</span>
+          </button>
         </div>
-        <button class="mobile-close-btn" aria-label="关闭菜单">
-          <span class="material-symbols-outlined" aria-hidden="true">close</span>
-        </button>
-      </div>
-      
-
       
       <ul class="mobile-nav-items">
         <li><a href="/" aria-label="前往主页">主页</a></li>
@@ -109,6 +116,11 @@ const {
   <!-- 主内容区域 -->
   <main class="main-layout">
     <div class="container">
+      <!-- 中间内容区 - 在移动端优先显示 -->
+      <section class="content-main">
+        <slot />
+      </section>
+      
       <!-- 左侧边栏 - 支持自定义内容 -->
       <aside class="sidebar-left">
         <slot name="left-sidebar">
@@ -119,11 +131,6 @@ const {
           <SidebarComponents posts={allBlogPosts} />
         </slot>
       </aside>
-      
-      <!-- 中间内容区 -->
-      <section class="content-main">
-        <slot />
-      </section>
       
       <!-- 右侧边栏 - 支持自定义内容 -->
       <aside class="sidebar-right">
@@ -314,6 +321,15 @@ const {
         }
       });
       
+      // 音乐播放器按钮功能
+      const musicPlayerBtn = document.getElementById('music-player-btn');
+      const floatingMusicPlayer = document.getElementById('floating-music-player');
+      
+      musicPlayerBtn.addEventListener('click', (e) => {
+        e.stopPropagation(); // 防止点击按钮时触发外部点击事件
+        floatingMusicPlayer.classList.remove('closed');
+      });
+      
       // 滚动触发动画
       const observerOptions = {
         threshold: 0.1,
@@ -381,6 +397,9 @@ const {
     <img src="/images/live2d/cat.svg" alt="Live2D猫" class="cat-image" />
     <div class="cat-message" id="cat-message"></div>
   </div>
+  
+  <!-- 悬浮式音乐播放器 -->
+  <FloatingMusicPlayer />
   
   <script>
     // 确保DOM加载完成后执行

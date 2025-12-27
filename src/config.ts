@@ -4,11 +4,11 @@
 // 站点基本信息
 export const siteConfig = {
   title: 'XingGreen Blog',
-  description: 'A beautiful Astro blog with Material Design 3 and anime background',
+  description: 'A beautiful Astro blog with anime background',
   author: 'XingGreen',
   siteUrl: 'http://localhost:4323', // 站点地址
   language: 'zh-CN',
-  timezone: 'Asia/Shanghai',
+  timezone: 'Asia/unknown',
   favicon: '/favicon.png',
   // 导航菜单配置
   navMenu: [
