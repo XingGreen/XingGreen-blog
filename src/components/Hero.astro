@@ -5,10 +5,32 @@ interface Props {
 }
 
 const { title, subtitle } = Astro.props;
+
+// 根据当前月份获取季节
+const getCurrentSeason = () => {
+  const month = new Date().getMonth() + 1;
+  if (month >= 3 && month <= 5) return 'spring';
+  if (month >= 6 && month <= 8) return 'summer';
+  if (month >= 9 && month <= 11) return 'autumn';
+  return 'winter';
+};
+
+// 季节对应的图片路径
+const seasonImages = {
+  spring: '/images/seasons/spring.jpg',
+  summer: '/images/seasons/summer.jpg',
+  autumn: '/images/seasons/autumn.jpg',
+  winter: '/images/seasons/winter.jpg'
+};
+
+const currentSeason = getCurrentSeason();
+const currentImage = seasonImages[currentSeason];
 ---
 
-<section class="hero" aria-labelledby="hero-title">
-
+<section class="hero" aria-labelledby="hero-title" style={`--season-image: url(${currentImage})`}>
+  
+  <!-- 季节背景图 -->
+  <div class="hero-season-image"></div>
   
   <div class="hero-content">
     <h1 id="hero-title">
@@ -21,7 +43,6 @@ const { title, subtitle } = Astro.props;
       </p>
     )}
     
-
   </div>
   
   <!-- 装饰元素 -->
