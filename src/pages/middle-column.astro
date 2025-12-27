@@ -1,0 +1,195 @@
+---
+import MainLayout from '../layouts/MainLayout.astro';
+import AuthorProfile from '../components/AuthorProfile.astro';
+import SidebarComponents from '../components/SidebarComponents.astro';
+import RightSidebar from '../components/RightSidebar.astro';
+import { blogPosts } from '../data/blogPosts';
+---
+
+<MainLayout title="中栏内容" class="middle-column-page">
+  <!-- 左侧边栏 -->
+  <aside slot="left-sidebar">
+    <AuthorProfile 
+      name="XingGreen" 
+      quote="人生如梦，不期而遇" 
+    />
+    <SidebarComponents posts={blogPosts} />
+  </aside>
+  
+  <!-- 中间内容区 - 作者介绍 -->
+  <section class="author-introduction">
+    <div class="container">
+      <div class="author-profile-large">
+        <div class="avatar-container-large">
+          <img src="http://q.qlogo.cn/headimg_dl?dst_uin=483165474&spec=640&img_type=jpg" alt="XingGreen的头像" class="author-avatar-large" />
+        </div>
+        
+        <h1 class="author-name-large">XingGreen</h1>
+        <p class="author-quote-large">人生如梦，不期而遇</p>
+        
+        <div class="social-links-large">
+          <a href="https://github.com/XingGreen" class="social-link-large" target="_blank" rel="noopener noreferrer">
+            <span class="material-symbols-outlined">code</span>
+            <span>GitHub</span>
+          </a>
+          <a href="https://space.bilibili.com/1342082835" class="social-link-large" target="_blank" rel="noopener noreferrer">
+            <span class="material-symbols-outlined">play_circle</span>
+            <span>Bilibili</span>
+          </a>
+        </div>
+      </div>
+      
+      <div class="about-section">
+        <h2>关于我</h2>
+        <p>热爱技术，分享生活。专注于前端开发和技术写作，喜欢探索新的技术和工具。</p>
+        <p>欢迎访问我的GitHub和B站，了解更多关于我的项目和分享。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 右侧边栏 -->
+  <aside slot="right-sidebar">
+    <RightSidebar />
+  </aside>
+</MainLayout>
+
+<style scoped>
+.author-introduction {
+  padding: 2rem;
+  text-align: center;
+}
+
+.author-profile-large {
+  margin-bottom: 3rem;
+  padding: 2rem;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  backdrop-filter: blur(10px);
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.avatar-container-large {
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  overflow: hidden;
+  margin: 0 auto 1.5rem;
+  border: 4px solid var(--primary-color);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+}
+
+.author-avatar-large {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.author-name-large {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  color: var(--primary-color);
+}
+
+.author-quote-large {
+  font-size: 1.2rem;
+  color: var(--text-secondary);
+  margin-bottom: 2rem;
+  font-style: italic;
+  line-height: 1.5;
+}
+
+.social-links-large {
+  display: flex;
+  gap: 1.5rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.social-link-large {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1.5rem;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid var(--primary-color);
+  border-radius: 25px;
+  color: var(--text-primary);
+  text-decoration: none;
+  transition: all 0.3s ease;
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.social-link-large:hover {
+  background: var(--primary-color);
+  color: var(--md3-on-primary);
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+}
+
+.social-link-large span.material-symbols-outlined {
+  font-size: 1.5rem;
+}
+
+.about-section {
+  max-width: 600px;
+  margin: 0 auto;
+  text-align: left;
+  padding: 2rem;
+  background-color: rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  backdrop-filter: blur(10px);
+}
+
+.about-section h2 {
+  margin-bottom: 1rem;
+  color: var(--primary-color);
+  text-align: center;
+}
+
+.about-section p {
+  margin-bottom: 1rem;
+  line-height: 1.6;
+  color: var(--text-primary);
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .author-introduction {
+    padding: 1rem;
+  }
+  
+  .author-profile-large {
+    padding: 1.5rem;
+  }
+  
+  .avatar-container-large {
+    width: 150px;
+    height: 150px;
+  }
+  
+  .author-name-large {
+    font-size: 2rem;
+  }
+  
+  .author-quote-large {
+    font-size: 1rem;
+  }
+  
+  .social-links-large {
+    gap: 1rem;
+  }
+  
+  .social-link-large {
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+  }
+  
+  .about-section {
+    padding: 1.5rem;
+  }
+}
+</style>

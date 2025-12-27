@@ -49,8 +49,7 @@
   /* 背景图变量 */
   --bg-image: url('/background.jpg');
   --bg-image-opacity: 0.1;
-  /* 排版变量 - 优先使用系统字体栈确保可靠性 */
-  --font-family-base: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
+  
   /* 如果Google Fonts可用，Inter字体将通过@import或<link>覆盖 */
   --font-size-xs: 0.75rem;
   --font-size-sm: 0.875rem;
