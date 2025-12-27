@@ -12,8 +12,14 @@
 -  **Markdown 支持** - 轻松编写和管理博客文章
 -  **主题切换** - 支持浅色/深色主题自动切换
 -  **雨声背景** - 提供沉浸式阅读体验
+-  **音乐播放器** - 支持背景音乐播放
+-  **Live2D 动画** - 可自定义的 Live2D 角色
+-  **博客活跃度概览** - 显示文章发布频率和统计图表
+-  **数学公式支持** - 使用 KaTeX 渲染数学公式
+-  **阅读时间估算** - 显示文章阅读所需时间
+-  **RSS 订阅** - 支持通过 RSS 订阅博客更新
 
-##  快速开始
+## 快速开始
 
 ### 前提条件
 
@@ -42,9 +48,12 @@ npm run dev
 ```
 http://localhost:4321
 ```
-##  博客的风格设计我参考了mizuki二次元动漫博客和vahiru博客的设计风格，同时加入了自己的个人风格。
 
-##  项目结构
+## 设计风格
+
+博客的风格设计参考了mizuki二次元动漫博客和vahiru博客的设计风格，同时加入了自己的个人风格。
+
+## 项目结构
 
 ```
 ├── src/
@@ -65,7 +74,7 @@ http://localhost:4321
 └── tsconfig.json        # TypeScript 配置
 ```
 
-##  配置说明
+## 配置说明
 
 项目的主要配置位于 `src/config.ts` 文件中，您可以根据需要自定义以下内容：
 
@@ -73,7 +82,7 @@ http://localhost:4321
 ```typescript
 export const siteConfig = {
   title: 'XingGreen Blog',
-  description: 'A beautiful Astro blog with Material Design 3 and anime background',
+  description: 'A beautiful Astro blog with anime background',
   author: 'XingGreen',
   siteUrl: 'http://localhost:4323',
   // ...
@@ -106,14 +115,140 @@ export const layoutConfig = {
 ### 功能开关
 ```typescript
 export const featureConfig = {
-  search: { enabled: true },
-  comment: { enabled: false },
-  codeHighlight: { enabled: true },
-  // ...
+  // 搜索功能
+  search: {
+    enabled: true,
+    provider: 'fusejs', // fusejs/pagefind
+  },
+  // 评论系统
+  comment: {
+    enabled: false,
+    provider: 'waline', // waline/giscus/utterances
+    config: {
+      serverURL: 'https://waline.vercel.app',
+      placeholder: '留下你的评论吧~',
+      requiredMeta: ['nick', 'mail'],
+      login: 'enable',
+      pageSize: 10,
+      emoji: [
+        'https://cdn.jsdelivr.net/npm/@waline/emojis@1.0.1/weibo/index.json',
+        'https://cdn.jsdelivr.net/npm/@waline/emojis@1.0.1/alus/index.json'
+      ],
+    },
+  },
+  // 阅读时间估算
+  readingTime: {
+    enabled: true,
+    wordsPerMinute: 300,
+  },
+  // RSS订阅
+  rss: {
+    enabled: true,
+    maxItems: 20,
+  },
+  // 代码高亮
+  codeHighlight: {
+    enabled: true,
+    theme: 'github-dark',
+    enableCopy: true,
+    enableLineNumbers: true,
+    enableCodeGroup: true,
+  },
+  // 数学公式
+  math: {
+    enabled: true,
+    provider: 'katex',
+  },
 };
 ```
 
-##  编写博客文章
+### 侧边栏组件配置
+```typescript
+export const sidebarLayoutConfig = [
+  // 左侧边栏组件
+  {
+    position: 'left',
+    components: [
+      {
+        name: 'Profile',
+        enabled: true,
+        order: 1,
+        config: {
+          avatar: 'http://q.qlogo.cn/headimg_dl?dst_uin=483165474&spec=640&img_type=jpg',
+          name: 'XingGreen',
+          bio: '热爱技术，分享生活',
+          socialLinks: [
+            { name: 'GitHub', url: 'https://github.com/XingGreen', icon: 'code' },
+            { name: 'Bilibili', url: 'https://space.bilibili.com/1342082835', icon: 'play_circle' },
+          ],
+        },
+      },
+      {
+        name: 'CategoryList',
+        enabled: true,
+        order: 2,
+        config: {
+          title: '分类',
+        },
+      },
+      {
+        name: 'TagCloud',
+        enabled: true,
+        order: 3,
+        config: {
+          title: '标签云',
+          maxTags: 20,
+        },
+      },
+    ],
+  },
+  // 右侧边栏组件
+  {
+    position: 'right',
+    components: [
+      {
+        name: 'Search',
+        enabled: true,
+        order: 1,
+        config: {
+          placeholder: '搜索文章...',
+        },
+      },
+      {
+        name: 'RecentPosts',
+        enabled: true,
+        order: 2,
+        config: {
+          title: '最新文章',
+          maxPosts: 5,
+        },
+      },
+      {
+        name: 'SiteStats',
+        enabled: true,
+        order: 3,
+        config: {
+          title: '站点统计',
+        },
+      },
+    ],
+  },
+];
+```
+
+### 友链配置
+```typescript
+export const friendsConfig = [
+  {
+    name: 'vahiru的博客',
+    url: 'https://vahiru.is-cute.cat',
+    description: '这是vahiru的博客',
+    avatar: 'https://via.placeholder.com/80'
+  },
+];
+```
+
+## 编写博客文章
 
 博客文章位于 `src/content/blog/` 目录下，使用 Markdown 格式编写。每个文章文件需要包含以下 Frontmatter 信息：
 
@@ -126,7 +261,7 @@ tags: [标签1, 标签2]
 author: 作者名
 ```
 
-##  命令说明
+## 命令说明
 
 | 命令 | 描述 |
 |------|------|
@@ -135,7 +270,7 @@ author: 作者名
 | `npm run preview` | 预览生产版本 |
 | `npm run astro` | 运行 Astro CLI 命令 |
 
-##  主题定制
+## 主题定制
 
 ### 自定义颜色
 
@@ -167,7 +302,7 @@ export const themeConfig = {
 };
 ```
 
-##  部署
+## 部署
 
 ### 静态部署
 
@@ -182,7 +317,7 @@ npm run build
    - Netlify
    - Cloudflare Pages
 
-##  技术栈
+## 技术栈
 
 - **Astro** - 静态站点生成器
 - **Material Web** - Material Design 3 组件
@@ -191,15 +326,15 @@ npm run build
 - **Waline** - 评论系统（可选）
 - **Shiki** - 代码高亮
 
-##  许可证
+## 许可证
 
 MIT License
 
-##  贡献
+## 贡献
 
 欢迎提交 Issue 和 Pull Request 来帮助改进这个项目！
 
-##  联系方式
+## 联系方式
 
 - GitHub: [XingGreen](https://github.com/XingGreen)
 - Bilibili: [记忆_瞬间的永恒](https://space.bilibili.com/1342082835)
