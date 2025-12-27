@@ -513,10 +513,11 @@ body.has-background[data-theme="dark"] .main-layout {
 
 /* 玻璃态效果样式 */
 .glass {
-  background-color: rgba(255, 255, 255, 0.8);
+  background-color: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.18);
+  border: 1px solid rgba(226, 232, 240, 0.5);
+  box-shadow: var(--shadow-sm);
 }
 
 [data-theme="dark"] .glass {
@@ -1032,8 +1033,8 @@ a:hover {
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
   overflow: hidden;
-  border: 1px solid rgba(255, 255, 255, 0.5);
-  box-shadow: var(--shadow-concave-convex);
+  border: 1px solid var(--md3-outline);
+  box-shadow: var(--shadow-md);
 }
 
 .card::before {
@@ -1051,9 +1052,9 @@ a:hover {
 
 .card:hover {
   transform: translateY(-6px);
-  box-shadow: var(--shadow-concave-convex-hover);
+  box-shadow: var(--shadow-lg);
   background-color: var(--card-hover);
-  border-color: rgba(255, 255, 255, 0.7);
+  border-color: var(--md3-primary);
 }
 
 .card:hover::before {

@@ -444,11 +444,11 @@ const sampleSong = {
   
   /* 玻璃态效果工具类 */
   .glass-effect {
-    background: rgba(255, 255, 255, 0.85);
+    background: rgba(255, 255, 255, 0.95);
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15), 0 4px 12px rgba(0, 0, 0, 0.08);
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow-md);
     transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
   }
   
@@ -477,7 +477,7 @@ const sampleSong = {
     will-change: transform, opacity;
     backface-visibility: hidden;
     perspective: 1000px;
-    box-shadow: 0 12px 36px rgba(0, 0, 0, 0.18), 0 0 0 1px rgba(255, 255, 255, 0.1);
+    box-shadow: 0 12px 36px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(226, 232, 240, 0.5);
     /* 确保定位不会被其他样式覆盖 */
     transform: none !important;
   }
@@ -692,8 +692,8 @@ const sampleSong = {
   }
   
   .control-btn {
-    background: linear-gradient(145deg, rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0.3));
-    border: 1px solid rgba(255, 255, 255, 0.4);
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.9), rgba(248, 250, 252, 0.7));
+    border: 1px solid var(--border-color);
     color: var(--text-primary);
     cursor: pointer;
     padding: 14px;
@@ -704,7 +704,7 @@ const sampleSong = {
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     min-width: 56px;
     min-height: 56px;
-    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15), 0 2px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1), 0 1px 4px rgba(0, 0, 0, 0.05);
     position: relative;
     overflow: hidden;
     backdrop-filter: blur(8px);
@@ -735,7 +735,13 @@ const sampleSong = {
     height: 300px;
   }
   
-  .control-btn:hover, .control-btn:focus {\n    background: linear-gradient(145deg, rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.4));\n    transform: translateY(-4px) scale(1.05);\n    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15), 0 4px 8px rgba(0, 0, 0, 0.1);\n    border-color: rgba(255, 255, 255, 0.6);\n    outline: none;\n  }\n  \n  /* 焦点状态样式 */\n  .control-btn:focus::after {\n    content: '';\n    position: absolute;\n    top: 50%;\n    left: 50%;\n    width: calc(100% + 8px);\n    height: calc(100% + 8px);\n    border-radius: var(--border-radius-md);\n    border: 2px solid rgba(5, 150, 105, 0.8);\n    transform: translate(-50%, -50%);\n    animation: focusRingPulse 1.5s infinite;\n  }\n  \n  @keyframes focusRingPulse {\n    0% {\n      transform: translate(-50%, -50%) scale(1);\n      opacity: 1;\n    }\n    100% {\n      transform: translate(-50%, -50%) scale(1.2);\n      opacity: 0;\n    }\n  }
+  .control-btn:hover, .control-btn:focus {
+    background: linear-gradient(145deg, rgba(255, 255, 255, 1), rgba(248, 250, 252, 0.9));
+    transform: translateY(-4px) scale(1.05);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12), 0 2px 8px rgba(0, 0, 0, 0.08);
+    border-color: var(--accent-primary);
+    outline: none;
+  }\n  \n  /* 焦点状态样式 */\n  .control-btn:focus::after {\n    content: '';\n    position: absolute;\n    top: 50%;\n    left: 50%;\n    width: calc(100% + 8px);\n    height: calc(100% + 8px);\n    border-radius: var(--border-radius-md);\n    border: 2px solid rgba(5, 150, 105, 0.8);\n    transform: translate(-50%, -50%);\n    animation: focusRingPulse 1.5s infinite;\n  }\n  \n  @keyframes focusRingPulse {\n    0% {\n      transform: translate(-50%, -50%) scale(1);\n      opacity: 1;\n    }\n    100% {\n      transform: translate(-50%, -50%) scale(1.2);\n      opacity: 0;\n    }\n  }
   
   [data-theme="dark"] .control-btn:hover {
     background: linear-gradient(145deg, rgba(55, 65, 81, 0.8), rgba(75, 85, 99, 0.6));
@@ -817,12 +823,12 @@ const sampleSong = {
   .progress-bar {
     width: 100%;
     height: 8px;
-    background: rgba(255, 255, 255, 0.2);
+    background: var(--bg-secondary);
     border-radius: 4px;
     overflow: hidden;
     cursor: pointer;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.15), inset 0 1px 3px rgba(0, 0, 0, 0.2);
+    box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.1), inset 0 1px 3px rgba(0, 0, 0, 0.15);
     position: relative;
   }
   
@@ -833,7 +839,7 @@ const sampleSong = {
   
   .progress-bar:hover {
     height: 10px;
-    background: rgba(255, 255, 255, 0.3);
+    background: var(--bg-tertiary);
   }
   
   [data-theme="dark"] .progress-bar:hover {
@@ -903,12 +909,12 @@ const sampleSong = {
     height: 6px;
     -webkit-appearance: none;
     appearance: none;
-    background: rgba(255, 255, 255, 0.2);
+    background: var(--bg-secondary);
     border-radius: 3px;
     outline: none;
     cursor: pointer;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.15), inset 0 1px 3px rgba(0, 0, 0, 0.2);
+    box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.1), inset 0 1px 3px rgba(0, 0, 0, 0.15);
   }
   
   /* 深色模式下的音量滑块背景 */
@@ -918,7 +924,7 @@ const sampleSong = {
   
   .volume-slider:hover {
     height: 8px;
-    background: rgba(255, 255, 255, 0.3);
+    background: var(--bg-tertiary);
   }
   
   [data-theme="dark"] .volume-slider:hover {
@@ -1014,7 +1020,7 @@ const sampleSong = {
     right: 8px;
     background: linear-gradient(145deg, var(--bg-secondary), var(--bg-tertiary));
     border: 1px solid var(--border-color);
-    color: var(--text-tertiary);
+    color: var(--text-secondary);
     cursor: pointer;
     padding: 8px;
     border-radius: var(--border-radius-md); /* 使用平滑圆角代替圆形 */

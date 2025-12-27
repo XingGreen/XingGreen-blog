@@ -87,7 +87,7 @@ const maxPosts = Math.max(...sortedMonths.map(([_, count]) => count), 1);
     ctx.stroke();
     
     // 获取CSS变量的实际值
-    const accentColor = getComputedStyle(document.documentElement).getPropertyValue('--accent-color').trim();
+    const accentColor = getComputedStyle(document.documentElement).getPropertyValue('--accent-primary').trim();
     const shadowColor = getComputedStyle(document.documentElement).getPropertyValue('--shadow').trim();
     const textPrimary = getComputedStyle(document.documentElement).getPropertyValue('--text-primary').trim();
     const textSecondary = getComputedStyle(document.documentElement).getPropertyValue('--text-secondary').trim();
@@ -163,7 +163,7 @@ const maxPosts = Math.max(...sortedMonths.map(([_, count]) => count), 1);
         ctx.clearRect(padding, padding, chartWidth, chartHeight);
         
         // 获取CSS变量的实际值
-        const accentColor = getComputedStyle(document.documentElement).getPropertyValue('--accent-color').trim();
+        const accentColor = getComputedStyle(document.documentElement).getPropertyValue('--accent-primary').trim();
         const shadowColor = getComputedStyle(document.documentElement).getPropertyValue('--shadow').trim();
         
         months.forEach((_, index) => {

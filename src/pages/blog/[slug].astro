@@ -270,9 +270,9 @@ const formattedDate = new Date(post.data.date).toLocaleDateString('zh-CN', {
   
   .markdown-content code:not(pre code) {
     padding: 0.25rem 0.5rem;
-    background-color: rgba(15, 23, 42, 0.3);
+    background-color: rgba(15, 23, 42, 0.1);
     border-radius: 6px;
-    color: var(--accent-color);
+    color: var(--accent-primary);
     font-size: 0.85rem;
   }
   
@@ -349,8 +349,8 @@ const formattedDate = new Date(post.data.date).toLocaleDateString('zh-CN', {
   }
   
   .markdown-content a:hover {
-    color: var(--accent-color);
-    border-bottom-color: var(--accent-color);
+    color: var(--accent-primary);
+    border-bottom-color: var(--accent-primary);
   }
   
   /* 文章操作按钮 */
@@ -379,7 +379,7 @@ const formattedDate = new Date(post.data.date).toLocaleDateString('zh-CN', {
   .action-btn:hover {
     transform: translateY(-2px);
     box-shadow: 0 8px 20px var(--shadow);
-    border-color: var(--accent-color);
+    border-color: var(--accent-primary);
   }
   
 
