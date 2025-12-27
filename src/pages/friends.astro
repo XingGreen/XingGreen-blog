@@ -20,7 +20,7 @@ const friends = friendsConfig;
           <a href={friend.url} target="_blank" rel="noopener noreferrer" class="friend-card">
             <div class="friend-content">
               <div class="friend-avatar">
-                <img src={friend.avatar} alt={friend.name}>
+                <img src={friend.avatar} alt={friend.name} loading="lazy" width="60" height="60">
               </div>
               <div class="friend-info">
                 <h3 class="friend-name">{friend.name}</h3>

@@ -22,7 +22,6 @@ expiryDate: 2025-12-31
 - **TypeScript** - 类型安全的JavaScript超集
 - **CSS Grid** - 灵活的响应式布局系统
 - **Markdown** - 简洁的内容编写格式
-- **GitHub Pages** - 免费的网站托管服务
 
 ## 为什么选择Astro？
 
@@ -59,4 +58,4 @@ const title = "Hello from Astro";
 
 感谢您访问我的博客！如果您有任何问题或建议，欢迎在评论区留言。
 
-期待与您分享更多有趣的内容！
+期待与您分享更多有趣的内容喵！

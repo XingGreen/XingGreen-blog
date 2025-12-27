@@ -268,21 +268,25 @@ body.has-background[data-theme="dark"] .main-layout {
   top: 120px;
   height: fit-content;
   flex: 0 0 var(--sidebar-width);
-  background-color: var(--bg-primary);
+  background-color: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 0.08px solid rgba(255, 255, 255, 0.8);
   border-radius: var(--border-radius-lg);
   padding: 1.5rem;
-  box-shadow: var(--neumorph-shadow-md);
-  border: none;
+  box-shadow: var(--shadow-md);
 }
 
 .content-main {
   flex: 1;
   min-width: 0;
-  background-color: var(--bg-primary);
+  background-color: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 0.08px solid rgba(255, 255, 255, 0.8);
   border-radius: var(--border-radius-lg);
   padding: 2rem;
-  box-shadow: var(--neumorph-shadow-md);
-  border: none;
+  box-shadow: var(--shadow-md);
 }
 
 /* 响应式设计 */
@@ -454,30 +458,14 @@ body.has-background[data-theme="dark"] .main-layout {
 [data-theme="dark"] .ripple::after {
   background: rgba(255, 255, 255, 0.8);
 }
-  
-  /* 容器内边距优化 */
-  .container {
-    padding: 0 1rem;
-  }
-  
-  /* 卡片样式优化 */
-  .card {
-    padding: 1rem;
-    margin-bottom: 1rem;
-  }
-  
-  /* 标题样式优化 */
-  h1 {
-    font-size: 2.5rem;
-  }
-  
-  h2 {
-    font-size: 2rem;
-  }
-  
-  h3 {
-    font-size: 1.75rem;
-  }
+}
+
+/* 深色主题下的侧边栏和内容区域玻璃效果 */
+[data-theme="dark"] .sidebar-left,
+[data-theme="dark"] .sidebar-right,
+[data-theme="dark"] .content-main {
+  background-color: rgba(15, 23, 42, 0.7);
+  border: 0.08px solid rgba(255, 255, 255, 0.3);
 }
 
 /* 小屏手机优化 */
@@ -513,16 +501,16 @@ body.has-background[data-theme="dark"] .main-layout {
 
 /* 玻璃态效果样式 */
 .glass {
-  background-color: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border: 1px solid rgba(226, 232, 240, 0.5);
+  background-color: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 0.08px solid rgba(255, 255, 255, 0.8);
   box-shadow: var(--shadow-sm);
 }
 
 [data-theme="dark"] .glass {
-  background-color: rgba(15, 23, 42, 0.8);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background-color: rgba(15, 23, 42, 0.7);
+  border: 0.08px solid rgba(255, 255, 255, 0.3);
 }
 
 /* 导航栏样式 - 全新设计 */
@@ -1631,17 +1619,24 @@ nav.scrolled {
   justify-content: center;
   text-align: center;
   padding: 2rem;
-  background: var(--bg-primary);
+  background-color: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 0.08px solid rgba(255, 255, 255, 0.8);
   border-radius: var(--border-radius-lg);
   margin-bottom: 2rem;
   box-shadow: var(--shadow-md);
-  border: 1px solid var(--border-color);
   overflow: hidden;
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .hero:hover {
   box-shadow: var(--shadow-lg);
+}
+
+[data-theme="dark"] .hero {
+  background-color: rgba(15, 23, 42, 0.6);
+  border: 0.08px solid rgba(255, 255, 255, 0.3);
 }
 
 .hero-buttons {

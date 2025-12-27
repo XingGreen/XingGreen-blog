@@ -5,21 +5,31 @@
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",
-    "build": "astro check && astro build",
+    "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "lint": "eslint . --ext .js,.ts,.astro",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
   },
   "dependencies": {
     "@astrojs/check": "^0.5.10",
+    "@astrojs/partytown": "^2.1.4",
     "@material/web": "^2.4.1",
     "@waline/client": "^3.8.0",
     "astro": "^4.5.18",
+    "astro-compress": "^2.3.8",
     "fuse.js": "^7.1.0",
     "material-design-icons": "^3.0.1",
     "material-symbols": "^0.24.0",
     "simplemde": "^1.11.2"
   },
   "devDependencies": {
-    "@types/node": "^20.12.7"
+    "@types/node": "^20.12.7",
+    "@typescript-eslint/eslint-plugin": "^8.50.1",
+    "@typescript-eslint/parser": "^8.50.1",
+    "eslint": "^9.39.2",
+    "eslint-plugin-astro": "^1.5.0",
+    "prettier": "^3.7.4"
   }
 }

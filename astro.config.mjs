@@ -1,9 +1,41 @@
 import { defineConfig } from 'astro/config';
+import partytown from '@astrojs/partytown';
+import compress from 'astro-compress';
 import { siteConfig, featureConfig } from './src/config';
 
 export default defineConfig({
   site: siteConfig.siteUrl, // 使用统一配置中的站点地址
-  integrations: [], 
+  integrations: [
+    partytown({
+      // 配置第三方脚本迁移到Web Worker
+      config: {
+        debug: false, // 生产环境关闭调试模式
+      },
+    }),
+    compress({
+      // 配置静态资源压缩
+      CSS: {
+        enabled: true,
+        verbose: false,
+      },
+      HTML: {
+        enabled: true,
+        verbose: false,
+      },
+      JavaScript: {
+        enabled: true,
+        verbose: false,
+      },
+      Image: {
+        enabled: false, // 已使用astro:assets处理图片
+        verbose: false,
+      },
+      SVG: {
+        enabled: true,
+        verbose: false,
+      },
+    }),
+  ], 
   output: 'static', 
   compressHTML: true, 
   build: {

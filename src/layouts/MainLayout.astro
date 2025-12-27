@@ -5,6 +5,9 @@ import SidebarComponents from '../components/SidebarComponents.astro';
 import RightSidebar from '../components/RightSidebar.astro';
 import FloatingMusicPlayer from '../components/FloatingMusicPlayer.astro';
 
+import { Image } from 'astro:assets';
+import cat from '../assets/images/live2d/cat.svg';
+
 import { blogPosts as allBlogPosts } from '../data/blogPosts';
 import { siteConfig } from '../config';
 
@@ -78,6 +81,11 @@ const {
           <!-- 主题切换按钮 -->
           <button class="theme-toggle-btn ripple" aria-label="切换主题">
             <span class="material-symbols-outlined" aria-hidden="true">light_mode</span>
+          </button>
+          
+          <!-- 背景蒙板控制按钮 -->
+          <button class="mask-toggle-btn ripple" id="mask-toggle-btn" aria-label="切换背景蒙板">
+            <span class="material-symbols-outlined" aria-hidden="true">visibility</span>
           </button>
           
           <!-- 音乐播放器按钮 -->
@@ -197,6 +205,43 @@ const {
       }
       localStorage.setItem('has-background', 'true');
       
+      // 背景蒙板控制按钮功能
+      const maskToggleBtn = document.getElementById('mask-toggle-btn');
+      
+      // 更新背景蒙板控制按钮状态的辅助函数
+      const updateMaskToggleBtn = () => {
+        const icon = maskToggleBtn?.querySelector('.material-symbols-outlined');
+        const hasBackground = document.body.classList.contains('has-background');
+        if (icon) {
+          icon.textContent = hasBackground ? 'visibility' : 'visibility_off';
+        }
+        if (maskToggleBtn) {
+          maskToggleBtn.classList.toggle('active', hasBackground);
+        }
+      };
+      
+      // 初始化背景蒙板控制按钮状态
+      updateMaskToggleBtn();
+      
+      // 背景蒙板控制按钮点击事件
+      maskToggleBtn?.addEventListener('click', () => {
+        const hasBackground = document.body.classList.contains('has-background');
+        
+        if (hasBackground) {
+          document.body.classList.remove('has-background');
+          localStorage.setItem('has-background', 'false');
+        } else {
+          // 只有在非深色模式下才能启用背景图
+          const currentTheme = document.documentElement.getAttribute('data-theme');
+          if (currentTheme !== 'dark') {
+            document.body.classList.add('has-background');
+            localStorage.setItem('has-background', 'true');
+          }
+        }
+        
+        updateMaskToggleBtn();
+      });
+      
       // 主题切换时管理背景图
       // 使用已经声明的themeToggleBtn变量
       themeToggleBtn?.addEventListener('click', () => {
@@ -206,6 +251,9 @@ const {
         } else if (localStorage.getItem('has-background') !== 'false') {
           document.body.classList.add('has-background');
         }
+        
+        // 更新背景蒙板控制按钮状态
+        updateMaskToggleBtn();
       });
       
       // 确保侧边栏在所有页面中都有一致的间距
@@ -394,7 +442,7 @@ const {
   
   <!-- Live2D猫 -->
   <div id="live2d-cat" class="live2d-cat">
-    <img src="/images/live2d/cat.svg" alt="Live2D猫" class="cat-image" />
+    <Image src={cat} alt="Live2D猫" class="cat-image" loading="lazy" width="150" height="150" />
     <div class="cat-message" id="cat-message"></div>
   </div>
   
