@@ -97,14 +97,47 @@ const activityData = processBlogData();
 <script is:inline define:vars={{ activityData }}>
   // 确保DOM加载完成后执行
   document.addEventListener('DOMContentLoaded', () => {
+    // 获取CSS变量值
+    const getCSSVar = (varName) => {
+      return getComputedStyle(document.documentElement).getPropertyValue(varName).trim();
+    };
+    
     // 设置图表主题颜色
     const theme = document.documentElement.getAttribute('data-theme') || 'light';
+    const accentPrimary = getCSSVar('--accent-primary');
+    const accentGradient = getCSSVar('--accent-gradient');
+    const bgPrimary = getCSSVar('--bg-primary');
+    const bgSecondary = getCSSVar('--bg-secondary');
+    const bgTertiary = getCSSVar('--bg-tertiary');
+    const textPrimary = getCSSVar('--text-primary');
+    const textSecondary = getCSSVar('--text-secondary');
+    
+    // 提取渐变中的主要颜色
+    const parseGradientColor = (gradient) => {
+      const match = gradient.match(/rgb\((\d+,\s*\d+,\s*\d+)\)/);
+      return match ? match[1] : '255, 107, 157'; // 默认粉色
+    };
+    
+    const accentColorRGB = parseGradientColor(accentGradient);
+    const accentColor = `rgb(${accentColorRGB})`;
+    const accentColorWithOpacity = `rgba(${accentColorRGB}, 0.3)`;
+    
     const colors = {
-      primary: theme === 'dark' ? '#4ade80' : '#16a34a',
-      secondary: theme === 'dark' ? '#60a5fa' : '#2563eb',
-      background: theme === 'dark' ? '#1e293b' : '#f8fafc',
-      text: theme === 'dark' ? '#f1f5f9' : '#1e293b',
-      grid: theme === 'dark' ? '#334155' : '#e2e8f0'
+      primary: accentColor,
+      secondary: theme === 'dark' ? '#8b5cf6' : '#9333ea',
+      background: bgTertiary,
+      text: textPrimary,
+      grid: textSecondary,
+      doughnutColors: [
+        accentColor,
+        '#f472b6', // 粉色
+        '#a78bfa', // 紫色
+        '#60a5fa', // 蓝色
+        '#34d399', // 绿色
+        '#fbbf24', // 黄色
+        '#f87171', // 红色
+        '#f97316'  // 橙色
+      ]
     };
     
     // 1. 创建发布频率图表
@@ -118,14 +151,18 @@ const activityData = processBlogData();
             label: '发布文章数',
             data: activityData.postFrequency.map(item => item.count),
             borderColor: colors.primary,
-            backgroundColor: `${colors.primary}20`,
-            borderWidth: 2,
+            backgroundColor: accentColorWithOpacity,
+            borderWidth: 3,
             fill: true,
-            tension: 0.4,
-            pointRadius: 4,
-            pointHoverRadius: 6,
+            tension: 0.6,
+            pointRadius: 6,
+            pointHoverRadius: 8,
             pointBackgroundColor: colors.primary,
-            pointBorderColor: colors.background
+            pointBorderColor: bgPrimary,
+            pointBorderWidth: 2,
+            pointHoverBackgroundColor: bgPrimary,
+            pointHoverBorderColor: colors.primary,
+            pointHoverBorderWidth: 3
           }]
         },
         options: {
@@ -137,26 +174,49 @@ const activityData = processBlogData();
             },
             tooltip: {
               mode: 'index',
-              intersect: false
+              intersect: false,
+              backgroundColor: bgPrimary,
+              titleColor: colors.primary,
+              bodyColor: textPrimary,
+              borderColor: colors.primary,
+              borderWidth: 2,
+              borderRadius: 12,
+              padding: 12,
+              boxPadding: 6,
+              usePointStyle: true,
+              callbacks: {
+                labelPointStyle: function(context) {
+                  return { pointStyle: 'circle', rotation: 0 };
+                }
+              }
             }
           },
           scales: {
             x: {
               grid: {
-                color: colors.grid
+                color: 'transparent',
+                drawBorder: false
               },
               ticks: {
-                color: colors.text
+                color: textSecondary,
+                font: {
+                  family: getCSSVar('--font-family-base')
+                }
               }
             },
             y: {
               beginAtZero: true,
               grid: {
-                color: colors.grid
+                color: bgSecondary,
+                drawBorder: false,
+                borderDash: [3, 3]
               },
               ticks: {
-                color: colors.text,
-                stepSize: 1
+                color: textSecondary,
+                stepSize: 1,
+                font: {
+                  family: getCSSVar('--font-family-base')
+                }
               }
             }
           },
@@ -164,6 +224,11 @@ const activityData = processBlogData();
             mode: 'nearest',
             axis: 'x',
             intersect: false
+          },
+          elements: {
+            line: {
+              tension: 0.6
+            }
           }
         }
       });
@@ -178,18 +243,10 @@ const activityData = processBlogData();
           labels: activityData.categories.map(([category]) => category),
           datasets: [{
             data: activityData.categories.map(([, count]) => count),
-            backgroundColor: [
-              colors.primary,
-              colors.secondary,
-              '#facc15',
-              '#f87171',
-              '#c084fc',
-              '#60a5fa',
-              '#14b8a6',
-              '#f97316'
-            ],
-            borderWidth: 2,
-            borderColor: colors.background
+            backgroundColor: colors.doughnutColors,
+            borderWidth: 3,
+            borderColor: bgPrimary,
+            hoverOffset: 10
           }]
         },
         options: {
@@ -199,14 +256,25 @@ const activityData = processBlogData();
             legend: {
               position: 'bottom',
               labels: {
-                color: colors.text,
+                color: textPrimary,
                 font: {
-                  size: 10
+                  size: 11,
+                  family: getCSSVar('--font-family-base')
                 },
-                padding: 10
+                padding: 15,
+                usePointStyle: true,
+                pointStyle: 'circle'
               }
             },
             tooltip: {
+              backgroundColor: bgPrimary,
+              titleColor: colors.primary,
+              bodyColor: textPrimary,
+              borderColor: colors.primary,
+              borderWidth: 2,
+              borderRadius: 12,
+              padding: 12,
+              boxPadding: 6,
               callbacks: {
                 label: function(context) {
                   const label = context.label || '';
@@ -217,7 +285,8 @@ const activityData = processBlogData();
                 }
               }
             }
-          }
+          },
+          cutout: '70%'
         }
       });
     }
@@ -235,31 +304,53 @@ const activityData = processBlogData();
 <style scoped>
 .activity-overview-card {
   background: var(--md3-surface);
-  border: 1px solid var(--md3-outline);
-  border-radius: var(--border-radius-md);
+  border: 2px solid var(--accent-primary);
+  border-radius: var(--border-radius-lg);
   padding: 1.5rem;
-  box-shadow: var(--shadow-sm);
+  box-shadow: var(--shadow-concave-convex);
   transition: var(--transition);
+  position: relative;
+  overflow: hidden;
+}
+
+.activity-overview-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background: var(--accent-gradient);
 }
 
 .activity-overview-card:hover {
-  box-shadow: var(--shadow-md);
+  box-shadow: var(--shadow-concave-convex-hover);
+  transform: translateY(-3px);
 }
 
 .chart-container {
   margin-top: 1.5rem;
+  background: var(--bg-tertiary);
+  border-radius: var(--border-radius-md);
+  padding: 1rem;
+  box-shadow: var(--neumorph-shadow-inner-sm);
 }
 
 .chart-container h4 {
   font-size: 0.95rem;
   font-weight: 600;
-  color: var(--md3-on-surface);
   margin-bottom: 1rem;
+  font-family: var(--font-family-title);
+  background: var(--accent-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 .activity-chart {
   height: 180px !important;
   width: 100% !important;
+  border-radius: var(--border-radius-sm);
 }
 
 /* 响应式调整 */
