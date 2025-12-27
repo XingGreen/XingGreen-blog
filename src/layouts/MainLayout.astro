@@ -58,79 +58,51 @@ const {
   <div class="geometric-shape circle" style="bottom: 20%; right: 15%;" aria-hidden="true"></div>
   <div class="geometric-shape square" style="top: 25%; left: 25%;" aria-hidden="true"></div>
 
-  <!-- 导航栏 -->
-  <nav class="glass" role="navigation" aria-label="主要导航">
-    <div class="container">
-      <div class="nav-content">
-        <div class="nav-logo" role="log">
-          <h1>{title}</h1>
-        </div>
-        
-        <!-- 桌面导航菜单 -->
-        <ul class="nav-menu">
-          {siteConfig.navMenu.map((item) => (
-            <li><a href={item.href} aria-label={item.ariaLabel}>{item.name}</a></li>
-          ))}
-        </ul>
-        
-        <!-- 导航功能按钮容器 -->
-        <div class="nav-actions">
-          <!-- 主题切换按钮 -->
-          <button class="theme-toggle-btn ripple" aria-label="切换主题">
-            <span class="material-symbols-outlined" aria-hidden="true">light_mode</span>
-          </button>
-          
-          <!-- 音乐播放器按钮 -->
-          <button class="music-player-btn ripple" id="music-player-btn" aria-label="打开音乐播放器">
-            <span class="material-symbols-outlined" aria-hidden="true">music_note</span>
-          </button>
-          
-          <!-- 移动端菜单按钮 -->
-          <button class="mobile-menu-btn ripple" aria-expanded="false" aria-controls="mobile-nav-menu" aria-label="打开菜单">
-            <span class="material-symbols-outlined" aria-hidden="true">menu</span>
-          </button>
-        </div>
+  <!-- 左侧导航栏 -->
+  <nav class="sidebar-nav glass" role="navigation" aria-label="主要导航">
+    <div class="sidebar-content">
+      <!-- 侧边栏顶部Logo -->
+      <div class="sidebar-logo" role="log">
+        <h1>{title}</h1>
       </div>
-    </div>
-    
-    <!-- 移动端导航菜单 -->
-    <div class="mobile-nav-menu" id="mobile-nav-menu">
-      <div class="mobile-nav-header">
-          <div class="nav-logo">
-            <h1>{title}</h1>
-          </div>
-          <button class="mobile-close-btn ripple" aria-label="关闭菜单">
-            <span class="material-symbols-outlined" aria-hidden="true">close</span>
-          </button>
-        </div>
       
-      <ul class="mobile-nav-items">
-        <li><a href="/" aria-label="前往主页">主页</a></li>
-        <li><a href="/blog" aria-label="查看文章归档">归档</a></li>
-        <li><a href="/friends" aria-label="查看友情链接">友链</a></li>
-        <li><a href="/contact" aria-label="联系博客作者">联系我</a></li>
+      <!-- 侧边栏导航菜单 -->
+      <ul class="sidebar-menu">
+        {siteConfig.navMenu.map((item) => (
+          <li><a href={item.href} aria-label={item.ariaLabel}>
+            <span class="material-symbols-outlined" aria-hidden="true">{item.icon || 'home'}</span>
+            <span class="menu-text">{item.name}</span>
+          </a></li>
+        ))}
       </ul>
+      
+      <!-- 侧边栏功能按钮容器 -->
+      <div class="sidebar-actions">
+        <!-- 主题切换按钮 -->
+        <button class="theme-toggle-btn ripple" aria-label="切换主题">
+          <span class="material-symbols-outlined" aria-hidden="true">light_mode</span>
+        </button>
+        
+        <!-- 音乐播放器按钮 -->
+        <button class="music-player-btn ripple" id="music-player-btn" aria-label="打开音乐播放器">
+          <span class="material-symbols-outlined" aria-hidden="true">music_note</span>
+        </button>
+      </div>
     </div>
   </nav>
   
+  <!-- 移动端菜单按钮（在侧边栏模式下仍然需要） -->
+  <button class="mobile-menu-btn sidebar-toggle ripple" aria-expanded="false" aria-controls="mobile-nav-menu" aria-label="打开菜单">
+    <span class="material-symbols-outlined" aria-hidden="true">menu</span>
+  </button>
+  
   <!-- 主内容区域 -->
-  <main class="main-layout">
+  <main class="main-layout horizontal-layout">
     <div class="container">
       <!-- 中间内容区 - 在移动端优先显示 -->
       <section class="content-main">
         <slot />
       </section>
-      
-      <!-- 左侧边栏 - 支持自定义内容 -->
-      <aside class="sidebar-left">
-        <slot name="left-sidebar">
-          <AuthorProfile 
-            name="XingGreen" 
-            quote="人生如梦，不期而遇" 
-          />
-          <SidebarComponents posts={allBlogPosts} />
-        </slot>
-      </aside>
       
       <!-- 右侧边栏 - 支持自定义内容 -->
       <aside class="sidebar-right">
@@ -273,51 +245,58 @@ const {
         }
       });
 
-      // 移动端菜单
-      const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
-      const mobileCloseBtn = document.querySelector('.mobile-close-btn');
-      const mobileNavMenu = document.querySelector('.mobile-nav-menu');
+      // 侧边栏切换功能
+      const sidebarToggle = document.querySelector('.sidebar-toggle');
+      const sidebarNav = document.querySelector('.sidebar-nav');
       
       // 创建遮罩层
       const overlay = document.createElement('div');
       overlay.className = 'mobile-nav-overlay';
       document.body.appendChild(overlay);
       
-      // 菜单显示函数
-      const showMobileMenu = () => {
-        mobileNavMenu?.classList.add('active');
+      // 侧边栏显示函数
+      const showSidebar = () => {
+        sidebarNav?.classList.add('active');
         overlay.classList.add('active');
         document.body.style.overflow = 'hidden'; // 防止背景滚动
-        mobileMenuBtn?.setAttribute('aria-expanded', 'true');
+        sidebarToggle?.setAttribute('aria-expanded', 'true');
       };
       
-      // 菜单隐藏函数
-      const hideMobileMenu = () => {
-        mobileNavMenu?.classList.remove('active');
+      // 侧边栏隐藏函数
+      const hideSidebar = () => {
+        sidebarNav?.classList.remove('active');
         overlay.classList.remove('active');
         document.body.style.overflow = 'auto'; // 恢复背景滚动
-        mobileMenuBtn?.setAttribute('aria-expanded', 'false');
+        sidebarToggle?.setAttribute('aria-expanded', 'false');
       };
       
-      // 点击菜单按钮显示菜单
-      mobileMenuBtn?.addEventListener('click', showMobileMenu);
+      // 点击切换按钮显示/隐藏侧边栏
+      sidebarToggle?.addEventListener('click', () => {
+        const isActive = sidebarNav?.classList.contains('active');
+        if (isActive) {
+          hideSidebar();
+        } else {
+          showSidebar();
+        }
+      });
       
-      // 点击关闭按钮隐藏菜单
-      mobileCloseBtn?.addEventListener('click', hideMobileMenu);
+      // 点击遮罩层隐藏侧边栏
+      overlay.addEventListener('click', hideSidebar);
       
-      // 点击遮罩层隐藏菜单
-      overlay.addEventListener('click', hideMobileMenu);
-      
-      // 点击移动菜单中的链接后隐藏菜单
-      const mobileNavLinks = document.querySelectorAll('.mobile-nav-items a');
-      mobileNavLinks.forEach(link => {
-        link.addEventListener('click', hideMobileMenu);
+      // 点击侧边栏中的链接后隐藏侧边栏（移动端）
+      const sidebarLinks = document.querySelectorAll('.sidebar-menu a');
+      sidebarLinks.forEach(link => {
+        link.addEventListener('click', () => {
+          if (window.innerWidth <= 1024) {
+            hideSidebar();
+          }
+        });
       });
       
       // 响应式调整
       window.addEventListener('resize', () => {
-        if (window.innerWidth > 768) {
-          hideMobileMenu();
+        if (window.innerWidth > 1024) {
+          hideSidebar();
         }
       });
       

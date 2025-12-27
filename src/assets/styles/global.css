@@ -294,19 +294,37 @@ body.has-background[data-theme="dark"] .main-layout {
 }
 
 @media (max-width: 1024px) {
-  .main-layout .container {
+  /* 移动设备上侧边栏转为可切换模式 */
+  .sidebar-nav {
+    transform: translateX(-100%);
+  }
+  
+  .sidebar-nav.active {
+    transform: translateX(0);
+  }
+  
+  .sidebar-toggle {
+    display: block;
+  }
+  
+  .main-layout.horizontal-layout {
+    margin-left: 0;
+  }
+  
+  /* 内容布局恢复为纵向 */
+  .horizontal-layout .container {
     flex-direction: column;
   }
   
-  .sidebar-left,
-  .sidebar-right {
+  .horizontal-layout .sidebar-right {
     position: static;
     flex: 1 1 100%;
     width: 100%;
+    height: auto;
   }
   
-  .content-main {
-    order: -1;
+  .horizontal-layout .content-main {
+    min-height: auto;
   }
 }
 
@@ -525,17 +543,139 @@ body.has-background[data-theme="dark"] .main-layout {
   border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
-/* 导航栏样式 - 全新设计 */
-nav {
+/* 左侧边栏导航样式 */
+.sidebar-nav {
   position: fixed;
   top: 0;
   left: 0;
-  right: 0;
+  bottom: 0;
+  width: var(--sidebar-width);
   z-index: 1000;
   background-color: var(--bg-primary);
-  border-bottom: 1px solid var(--border-color);
+  border-right: 1px solid var(--border-color);
   box-shadow: var(--shadow-sm);
   transition: var(--transition);
+  overflow-y: auto;
+}
+
+.sidebar-content {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 1.5rem 1rem;
+}
+
+.sidebar-logo {
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.sidebar-logo h1 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin: 0;
+  background: var(--accent-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.sidebar-menu {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  flex: 1;
+}
+
+.sidebar-menu li {
+  margin-bottom: 0.5rem;
+}
+
+.sidebar-menu a {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  color: var(--text-primary);
+  text-decoration: none;
+  border-radius: var(--border-radius-md);
+  transition: var(--transition);
+}
+
+.sidebar-menu a:hover {
+  background-color: var(--bg-secondary);
+  color: var(--accent-primary);
+}
+
+.sidebar-menu a .material-symbols-outlined {
+  font-size: 1.25rem;
+}
+
+.sidebar-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--border-color);
+}
+
+.sidebar-actions button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 0.75rem;
+  background-color: var(--bg-secondary);
+  border: none;
+  border-radius: var(--border-radius-md);
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.sidebar-actions button:hover {
+  background-color: var(--bg-tertiary);
+  color: var(--accent-primary);
+}
+
+/* 侧边栏切换按钮（移动端） */
+.sidebar-toggle {
+  position: fixed;
+  top: 1rem;
+  left: 1rem;
+  z-index: 1001;
+  display: none;
+}
+
+/* 主内容区域横向布局 */
+.main-layout.horizontal-layout {
+  margin-left: var(--sidebar-width);
+  margin-top: 0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* 横向显示的内容布局 */
+.horizontal-layout .container {
+  display: flex;
+  gap: 2rem;
+  align-items: stretch;
+  height: 100%;
+}
+
+.horizontal-layout .content-main {
+  flex: 1;
+  min-height: calc(100vh - 4rem);
+  overflow-y: auto;
+}
+
+.horizontal-layout .sidebar-right {
+  flex: 0 0 var(--sidebar-width);
+  position: sticky;
+  top: 2rem;
+  height: calc(100vh - 4rem);
+  overflow-y: auto;
 }
 
 /* 移动端导航菜单已在下方重新定义 */

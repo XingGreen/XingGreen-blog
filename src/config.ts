@@ -12,10 +12,10 @@ export const siteConfig = {
   favicon: '/favicon.png',
   // 导航菜单配置
   navMenu: [
-    { name: '主页', href: '/', ariaLabel: '前往主页' },
-    { name: '归档', href: '/blog', ariaLabel: '查看文章归档' },
-    { name: '友链', href: '/friends', ariaLabel: '查看友情链接' },
-    { name: '联系我', href: '/contact', ariaLabel: '联系博客作者' },
+    { name: '主页', href: '/', ariaLabel: '前往主页', icon: 'home' },
+    { name: '归档', href: '/blog', ariaLabel: '查看文章归档', icon: 'article' },
+    { name: '友链', href: '/friends', ariaLabel: '查看友情链接', icon: 'link' },
+    { name: '联系我', href: '/contact', ariaLabel: '联系博客作者', icon: 'mail' },
   ],
 };
 
