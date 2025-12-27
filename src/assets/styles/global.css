@@ -16,6 +16,29 @@
   --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
   --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
   --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  /* 内凹外凸双色阴影 */
+  --shadow-concave-convex: 
+    /* 外凸阴影 - 深色 */
+    8px 8px 16px rgba(0, 0, 0, 0.1),
+    /* 内凹阴影 - 浅色 */
+    inset 2px 2px 5px rgba(255, 255, 255, 0.8),
+    inset -3px -3px 7px rgba(0, 0, 0, 0.05);
+  /* 悬停状态下的内凹外凸阴影 */
+  --shadow-concave-convex-hover: 
+    /* 外凸阴影 - 深色 */
+    12px 12px 24px rgba(0, 0, 0, 0.15),
+    /* 内凹阴影 - 浅色 */
+    inset 3px 3px 6px rgba(255, 255, 255, 0.9),
+    inset -4px -4px 8px rgba(0, 0, 0, 0.08);
+  /* 软糖按钮样式 */
+  --btn-gummy-radius: 25px;
+  --btn-gummy-shadow: 0 8px 16px rgba(0, 0, 0, 0.15), 0 3px 6px rgba(0, 0, 0, 0.1);
+  --btn-gummy-shadow-pressed: inset 0 4px 8px rgba(0, 0, 0, 0.2), inset 0 2px 4px rgba(0, 0, 0, 0.1);
+  --btn-gummy-transform: translateY(-2px);
+  --btn-gummy-transform-pressed: translateY(2px);
+  --neumorph-shadow-inner-sm: inset 2px 2px 4px rgba(174, 174, 192, 0.3), inset -2px -2px 4px rgba(255, 255, 255, 0.7);
+  --neumorph-shadow-md: 6px 6px 12px rgba(174, 174, 192, 0.35), -6px -6px 12px rgba(255, 255, 255, 0.75);
+  --neumorph-shadow-inner-md: inset 3px 3px 6px rgba(174, 174, 192, 0.35), inset -3px -3px 6px rgba(255, 255, 255, 0.75);
   --border-radius-sm: 6px;
   --border-radius-md: 12px;
   --border-radius-lg: 20px;
@@ -107,6 +130,13 @@ body.has-background::before {
   --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
   --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -1px rgba(0, 0, 0, 0.3);
   --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5), 0 4px 6px -2px rgba(0, 0, 0, 0.4);
+  /* 深色模式新拟态设计阴影变量 */
+  --neumorph-shadow: 8px 8px 16px rgba(0, 0, 0, 0.4), -8px -8px 16px rgba(30, 41, 59, 0.3);
+  --neumorph-shadow-inner: inset 4px 4px 8px rgba(0, 0, 0, 0.4), inset -4px -4px 8px rgba(30, 41, 59, 0.3);
+  --neumorph-shadow-sm: 4px 4px 8px rgba(0, 0, 0, 0.3), -4px -4px 8px rgba(30, 41, 59, 0.2);
+  --neumorph-shadow-inner-sm: inset 2px 2px 4px rgba(0, 0, 0, 0.3), inset -2px -2px 4px rgba(30, 41, 59, 0.2);
+  --neumorph-shadow-md: 6px 6px 12px rgba(0, 0, 0, 0.35), -6px -6px 12px rgba(30, 41, 59, 0.25);
+  --neumorph-shadow-inner-md: inset 3px 3px 6px rgba(0, 0, 0, 0.35), inset -3px -3px 6px rgba(30, 41, 59, 0.25);
 }
 
 /* Material Design 3 变量 - 全新设计 */
@@ -204,21 +234,21 @@ body.has-background[data-theme="dark"] .main-layout {
   transition: var(--transition);
   position: relative;
   overflow: hidden;
-  border: 1px solid var(--border-color);
-  box-shadow: var(--shadow-sm);
+  border: none;
+  box-shadow: var(--neumorph-shadow-md);
 }
 
 .card:hover {
   transform: translateY(-2px);
-  box-shadow: var(--shadow-md);
+  box-shadow: var(--neumorph-shadow);
   background-color: var(--card-hover);
 }
 
-/* 新的三栏布局系统 */
+/* 新的三栏布局系统 - 极简留白设计 */
 .main-layout {
   min-height: calc(100vh - 80px);
   margin-top: 80px;
-  padding: 2rem 1rem;
+  padding: 4rem 2rem;
   background-color: var(--bg-secondary);
 }
 
@@ -241,8 +271,8 @@ body.has-background[data-theme="dark"] .main-layout {
   background-color: var(--bg-primary);
   border-radius: var(--border-radius-lg);
   padding: 1.5rem;
-  box-shadow: var(--shadow-sm);
-  border: 1px solid var(--border-color);
+  box-shadow: var(--neumorph-shadow-md);
+  border: none;
 }
 
 .content-main {
@@ -251,8 +281,8 @@ body.has-background[data-theme="dark"] .main-layout {
   background-color: var(--bg-primary);
   border-radius: var(--border-radius-lg);
   padding: 2rem;
-  box-shadow: var(--shadow-sm);
-  border: 1px solid var(--border-color);
+  box-shadow: var(--neumorph-shadow-md);
+  border: none;
 }
 
 /* 响应式设计 */
@@ -886,18 +916,18 @@ a:hover {
   text-decoration: underline;
 }
 
-/* Buttons - 统一设计语言 */
+/* Buttons - 软糖效果设计 */
 .btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 0.625rem 1.25rem;
-  border: 1px solid var(--md3-outline);
-  border-radius: var(--border-radius-md); /* 与卡片圆角保持一致 */
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: var(--btn-gummy-radius);
   font-size: 1rem;
   font-weight: 500;
   cursor: pointer;
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); /* 与卡片过渡时间保持一致 */
+  transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
   position: relative;
   overflow: hidden;
   user-select: none;
@@ -905,38 +935,36 @@ a:hover {
   text-decoration: none;
   background-color: var(--md3-surface);
   color: var(--md3-on-surface);
-  box-shadow: var(--shadow-sm);
+  box-shadow: var(--btn-gummy-shadow);
 }
 
 .btn-primary {
   background: var(--accent-gradient);
   color: var(--md3-on-primary);
-  border-color: transparent;
-  box-shadow: var(--shadow-sm);
+  box-shadow: 0 8px 16px rgba(5, 150, 105, 0.3), 0 3px 6px rgba(5, 150, 105, 0.2);
 }
 
 .btn-primary:hover {
-  transform: translateY(-4px); /* 与卡片悬停高度保持一致 */
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15); /* 与卡片阴影保持一致 */
+  transform: var(--btn-gummy-transform) scale(1.02);
+  box-shadow: 0 12px 24px rgba(5, 150, 105, 0.4), 0 6px 12px rgba(5, 150, 105, 0.3);
   opacity: 0.95;
 }
 
 .btn-secondary {
   background-color: var(--md3-surface-variant);
   color: var(--md3-on-surface-variant);
-  border-color: var(--md3-outline);
-  box-shadow: var(--shadow-sm);
+  box-shadow: var(--btn-gummy-shadow);
 }
 
 .btn-secondary:hover {
   background-color: var(--md3-secondary-container);
-  transform: translateY(-4px); /* 与卡片悬停高度保持一致 */
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15); /* 与卡片阴影保持一致 */
+  transform: var(--btn-gummy-transform) scale(1.02);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15), 0 6px 12px rgba(0, 0, 0, 0.1);
 }
 
 .btn:active {
-  transform: translateY(0);
-  box-shadow: var(--shadow-sm);
+  transform: var(--btn-gummy-transform-pressed) scale(0.98);
+  box-shadow: var(--btn-gummy-shadow-pressed);
 }
 
 /* Button Focus Styles - 统一可访问性 */
@@ -972,15 +1000,17 @@ a:hover {
 /* Button Variants */
 .btn-outline {
   background-color: transparent;
-  border-color: var(--md3-primary);
+  border: 2px solid var(--md3-primary);
   color: var(--md3-primary);
+  box-shadow: var(--btn-gummy-shadow);
 }
 
 .btn-outline:hover {
   background-color: var(--md3-primary);
   color: var(--md3-on-primary);
-  transform: translateY(-4px); /* 与卡片悬停高度保持一致 */
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15); /* 与卡片阴影保持一致 */
+  border-color: var(--md3-primary);
+  transform: var(--btn-gummy-transform) scale(1.02);
+  box-shadow: 0 12px 24px rgba(5, 150, 105, 0.4), 0 6px 12px rgba(5, 150, 105, 0.3);
 }
 
 .btn-sm {
@@ -1002,8 +1032,8 @@ a:hover {
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
   overflow: hidden;
-  border: 1px solid var(--md3-outline);
-  box-shadow: var(--shadow-sm);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  box-shadow: var(--shadow-concave-convex);
 }
 
 .card::before {
@@ -1021,9 +1051,9 @@ a:hover {
 
 .card:hover {
   transform: translateY(-6px);
-  box-shadow: var(--shadow-lg);
+  box-shadow: var(--shadow-concave-convex-hover);
   background-color: var(--card-hover);
-  border-color: var(--md3-primary);
+  border-color: rgba(255, 255, 255, 0.7);
 }
 
 .card:hover::before {
