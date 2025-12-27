@@ -1,17 +1,17 @@
 /* 主题颜色变量 - 二次元动漫风格（高饱和度、明亮配色） */
+/* 浅色主题 - 森林绿色风格 */
 :root {
-  /* 浅色主题 - 柔和绿色风格 */
   --bg-primary: #ffffff;
-  --bg-secondary: #f0fff4;
-  --bg-tertiary: #e6fffa;
+  --bg-secondary: #e8f5e9;
+  --bg-tertiary: #c8e6c9;
   --text-primary: #2d3748; /* 深色文本确保可读性 */
   --text-secondary: #4a5568;
   --text-tertiary: #718096;
-  --border-color: #9ae6b4;
-  --accent-primary: #48bb78; /* 柔和的绿色主色调 */
-  --accent-secondary: #68d391;
-  --accent-tertiary: #81e6d9;
-  --accent-gradient: linear-gradient(135deg, #48bb78, #68d391, #81e6d9);
+  --border-color: #4caf50;
+  --accent-primary: #2e7d32; /* 深森林绿色主色调 */
+  --accent-secondary: #388e3c;
+  --accent-tertiary: #43a047;
+  --accent-gradient: linear-gradient(135deg, #2e7d32, #388e3c, #4caf50);
   --accent-gradient-alt: linear-gradient(135deg, #8b5cf6, #a78bfa, #c4b5fd); /* 紫色渐变 */
   --accent-gradient-blue: linear-gradient(135deg, #3b82f6, #60a5fa, #93c5fd); /* 蓝色渐变 */
   --card-bg: #ffffff;
@@ -117,7 +117,7 @@ body.has-background::before {
   --bg-image-opacity: 0.05;
 }
 
-/* 深色主题 - 柔和绿色霓虹风格 */
+/* 深色主题 - 森林绿色风格 */
 [data-theme="dark"] {
   --bg-primary: #1a202c;
   --bg-secondary: #2d3748;
@@ -125,11 +125,11 @@ body.has-background::before {
   --text-primary: #ffffff;
   --text-secondary: #f1f5f9;
   --text-tertiary: #cbd5e1;
-  --border-color: #48bb78;
-  --accent-primary: #48bb78;
-  --accent-secondary: #68d391;
-  --accent-tertiary: #81e6d9;
-  --accent-gradient: linear-gradient(135deg, #48bb78, #68d391, #81e6d9);
+  --border-color: #4caf50;
+  --accent-primary: #388e3c;
+  --accent-secondary: #4caf50;
+  --accent-tertiary: #66bb6a;
+  --accent-gradient: linear-gradient(135deg, #388e3c, #4caf50, #66bb6a);
   --accent-gradient-alt: linear-gradient(135deg, #8b5cf6, #a78bfa, #c4b5fd);
   --accent-gradient-blue: linear-gradient(135deg, #3b82f6, #60a5fa, #93c5fd);
   --card-bg: #2d3748;
@@ -146,12 +146,12 @@ body.has-background::before {
   --neumorph-shadow-inner-md: inset 3px 3px 6px rgba(0, 0, 0, 0.35), inset -3px -3px 6px rgba(72, 187, 120, 0.12);
 }
 
-/* Material Design 3 变量 - 柔和绿色风格 */
+/* Material Design 3 变量 - 森林绿色风格 */
 :root {
   --md3-primary: var(--accent-primary);
-  --md3-primary-container: rgba(72, 187, 120, 0.1);
+  --md3-primary-container: rgba(46, 125, 50, 0.1);
   --md3-secondary: var(--accent-secondary);
-  --md3-secondary-container: rgba(104, 211, 145, 0.1);
+  --md3-secondary-container: rgba(56, 142, 60, 0.1);
   --md3-tertiary: #8b5cf6; /* 紫色作为第三色调 */
   --md3-tertiary-container: rgba(139, 92, 246, 0.1);
   --md3-surface: var(--card-bg);
@@ -178,8 +178,8 @@ body.has-background::before {
 
 /* 深色主题下的Material Design 3 变量 */
 [data-theme="dark"] {
-  --md3-primary-container: rgba(72, 187, 120, 0.2);
-  --md3-secondary-container: rgba(104, 211, 145, 0.2);
+  --md3-primary-container: rgba(46, 125, 50, 0.2);
+  --md3-secondary-container: rgba(56, 142, 60, 0.2);
   --md3-tertiary-container: rgba(139, 92, 246, 0.2);
   --md3-error-container: #dc2626;
   --md3-on-error-container: #fef2f2;
