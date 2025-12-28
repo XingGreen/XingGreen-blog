@@ -115,7 +115,7 @@ const activityData = processBlogData();
     // 提取渐变中的主要颜色
     const parseGradientColor = (gradient) => {
       const match = gradient.match(/rgb\((\d+,\s*\d+,\s*\d+)\)/);
-      return match ? match[1] : '255, 107, 157'; // 默认粉色
+      return match ? match[1] : '72, 187, 120'; // 默认森林绿色
     };
     
     const accentColorRGB = parseGradientColor(accentGradient);
@@ -130,7 +130,7 @@ const activityData = processBlogData();
       grid: textSecondary,
       doughnutColors: [
         accentColor,
-        '#f472b6', // 粉色
+        '#388e3c', // 森林绿色
         '#a78bfa', // 紫色
         '#60a5fa', // 蓝色
         '#34d399', // 绿色

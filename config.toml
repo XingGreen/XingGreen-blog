@@ -12,7 +12,7 @@ author = "XingGreen"
 # 可用主题: light, dark, auto
 default = "auto"
 # 主色调
-primary = "#ffb7c5"  # Sakura pink
+primary = "#2e7d32"  # Forest green
 secondary = "#85d4ff"  # Glass-cyan
 accent = "#98fb98"  # Mint green
 

@@ -1,3 +1,12 @@
+/* 引入自定义字体 */
+@font-face {
+  font-family: "Skynight";
+  src: url("/鸿雷小纸条青春体.ttf") format("opentype");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
 /* 主题颜色变量 - 二次元动漫风格（高饱和度、明亮配色） */
 /* 浅色主题 - 森林绿色风格 */
 :root {
@@ -52,10 +61,10 @@
   /* 背景图变量 */
   --bg-image: url('/background.jpg');
   --bg-image-opacity: 0.1;
-  /* 排版变量 - 二次元动漫风格字体 */
-  --font-family-base: 'M PLUS 2', 'Noto Sans JP', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; /* 主要字体：现代无衬线风格 */
-  --font-family-title: 'Kosugi Maru', 'Noto Sans JP', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; /* 标题字体：圆润可爱风格 */
-  --font-family-dialog: 'Noto Sans JP', 'Kosugi Maru', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; /* 对话框字体：清晰易读风格 */
+  /* 排版变量 - 星空浪漫风格字体 */
+  --font-family-base: "Skynight", 'M PLUS 2', 'Noto Sans JP', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; /* 主要字体：星空浪漫风格 */
+  --font-family-title: "Skynight", 'Kosugi Maru', 'Noto Sans JP', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; /* 标题字体：星空浪漫风格 */
+  --font-family-dialog: "Skynight", 'Noto Sans JP', 'Kosugi Maru', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; /* 对话框字体：星空浪漫风格 */
   --font-size-xs: 0.75rem;
   --font-size-sm: 0.875rem;
   --font-size-base: 1rem;
@@ -254,7 +263,7 @@ body.has-background::before {
 [data-theme="dark"] .manga-dialog {
   background: var(--bg-secondary);
   border-color: var(--accent-primary);
-  box-shadow: 0 4px 6px -1px rgba(255, 107, 157, 0.4), 0 2px 4px -1px rgba(255, 107, 157, 0.3);
+  box-shadow: 0 4px 6px -1px rgba(72, 187, 120, 0.4), 0 2px 4px -1px rgba(72, 187, 120, 0.3);
 }
 
 [data-theme="dark"] .manga-dialog::after {
@@ -2289,7 +2298,7 @@ footer {
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   border-top: 2px solid var(--accent-primary);
-  box-shadow: 0 -4px 12px rgba(255, 107, 157, 0.1);
+  box-shadow: 0 -4px 12px rgba(72, 187, 120, 0.1);
   transition: var(--transition);
 }
 
@@ -2415,7 +2424,7 @@ footer {
 [data-theme="dark"] footer {
   background-color: rgba(26, 11, 30, 0.9);
   border-top-color: var(--accent-primary);
-  box-shadow: 0 -4px 12px rgba(255, 107, 157, 0.2);
+  box-shadow: 0 -4px 12px rgba(72, 187, 120, 0.2);
 }
 
 /* 移动端页脚优化 */
