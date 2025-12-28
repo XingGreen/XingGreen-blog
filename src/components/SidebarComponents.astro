@@ -27,7 +27,7 @@ const tags = Object.entries(tagCounts).sort((a, b) => b[1] - a[1]);
 
 <div class="sidebar-components">
   <!-- 公告组件 -->
-  <div class="sidebar-card announcement">
+  <div class="sidebar-card announcement glass">
     <h3 class="sidebar-title">
       <span class="material-symbols-outlined">announcement</span>
       公告
@@ -36,7 +36,7 @@ const tags = Object.entries(tagCounts).sort((a, b) => b[1] - a[1]);
   </div>
 
   <!-- 分类组件 -->
-  <div class="sidebar-card categories">
+  <div class="sidebar-card categories glass">
     <h3 class="sidebar-title">
       <span class="material-symbols-outlined">category</span>
       分类
@@ -56,7 +56,7 @@ const tags = Object.entries(tagCounts).sort((a, b) => b[1] - a[1]);
   </div>
 
   <!-- 标签组件 -->
-  <div class="sidebar-card tags">
+  <div class="sidebar-card tags glass">
     <h3 class="sidebar-title">
       <span class="material-symbols-outlined">sell</span>
       标签
@@ -92,6 +92,15 @@ const tags = Object.entries(tagCounts).sort((a, b) => b[1] - a[1]);
   position: relative;
   overflow: hidden;
 }
+
+/* 玻璃态侧边栏卡片样式调整 */
+.sidebar-card.glass {
+  background: transparent;
+  border: 0.08px solid rgba(255, 255, 255, 0.8);
+  box-shadow: var(--shadow-sm);
+}
+
+
 
 .sidebar-card::before {
   content: '';

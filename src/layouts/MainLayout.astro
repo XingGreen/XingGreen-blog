@@ -4,6 +4,8 @@ import AuthorProfile from '../components/AuthorProfile.astro';
 import SidebarComponents from '../components/SidebarComponents.astro';
 import RightSidebar from '../components/RightSidebar.astro';
 import FloatingMusicPlayer from '../components/FloatingMusicPlayer.astro';
+import ParticleBackground from '../components/ParticleBackground.astro';
+
 
 import { Image } from 'astro:assets';
 import cat from '../assets/images/live2d/cat.svg';
@@ -36,13 +38,7 @@ const {
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content={description} />
   <title>{title}</title>
-  <!-- 预加载主题样式以避免切换闪烁 -->
-  <script is:inline>
-    // 在页面渲染前设置主题，避免闪烁
-    const initialTheme = localStorage.getItem('theme') || 
-                      (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
-    document.documentElement.setAttribute('data-theme', initialTheme);
-  </script>
+
 
 
   <!-- Google Fonts - 二次元动漫风格字体 -->
@@ -55,12 +51,20 @@ const {
   <link rel="stylesheet" href="/material-symbols/outlined.css" />
 </head>
 <body class={bodyClass}>
+  <!-- 粒子背景 -->
+  <ParticleBackground />
+  
   <!-- 几何装饰元素 -->
   <div class="geometric-shape circle" style="top: 10%; left: 5%;" aria-hidden="true"></div>
   <div class="geometric-shape square" style="top: 50%; right: 8%;" aria-hidden="true"></div>
   <div class="geometric-shape triangle" style="bottom: 15%; left: 10%;" aria-hidden="true"></div>
   <div class="geometric-shape circle" style="bottom: 20%; right: 15%;" aria-hidden="true"></div>
   <div class="geometric-shape square" style="top: 25%; left: 25%;" aria-hidden="true"></div>
+  <div class="geometric-shape hexagon" style="top: 15%; right: 10%;" aria-hidden="true"></div>
+  <div class="geometric-shape circle" style="top: 70%; left: 15%;" aria-hidden="true"></div>
+  <div class="geometric-shape square" style="bottom: 30%; right: 25%;" aria-hidden="true"></div>
+  <div class="geometric-shape triangle" style="top: 35%; right: 20%;" aria-hidden="true"></div>
+  <div class="geometric-shape hexagon" style="bottom: 40%; left: 25%;" aria-hidden="true"></div>
 
   <!-- 导航栏 -->
   <nav class="glass" role="navigation" aria-label="主要导航">
@@ -79,10 +83,7 @@ const {
         
         <!-- 导航功能按钮容器 -->
         <div class="nav-actions">
-          <!-- 主题切换按钮 -->
-          <button class="theme-toggle-btn ripple" aria-label="切换主题">
-            <span class="material-symbols-outlined" aria-hidden="true">light_mode</span>
-          </button>
+
           
           <!-- 背景蒙板控制按钮 -->
           <button class="mask-toggle-btn ripple" id="mask-toggle-btn" aria-label="切换背景蒙板">
@@ -169,93 +170,59 @@ const {
     document.addEventListener('DOMContentLoaded', () => {
       // 暴露博客文章数据给全局对象，供搜索组件使用
       window.blogPosts = allBlogPosts;
-      // 主题切换功能
-        const themeToggleBtn = document.querySelector('.theme-toggle-btn');
-        // 获取当前主题（已在页面头部设置）
-        const currentTheme = document.documentElement.getAttribute('data-theme');
+
+      
+      // 背景图功能控制
+      const BackgroundControl = {
+        // 初始化背景图状态
+        init() {
+          const hasBackground = localStorage.getItem('has-background') !== 'false';
+          if (hasBackground) {
+            document.body.classList.add('has-background');
+          }
+          this.updateToggleBtn();
+        },
         
-        // 更新主题切换按钮状态的辅助函数
-        const updateThemeToggleBtn = (theme) => {
-          const icon = themeToggleBtn?.querySelector('.material-symbols-outlined');
+        // 更新切换按钮状态
+        updateToggleBtn() {
+          const maskToggleBtn = document.getElementById('mask-toggle-btn');
+          if (!maskToggleBtn) return;
+          
+          const icon = maskToggleBtn.querySelector('.material-symbols-outlined');
+          const hasBackground = document.body.classList.contains('has-background');
+          
           if (icon) {
-            icon.textContent = theme === 'dark' ? 'dark_mode' : 'light_mode';
+            icon.textContent = hasBackground ? 'visibility' : 'visibility_off';
           }
-          if (themeToggleBtn) {
-            themeToggleBtn.classList.toggle('active', theme === 'dark');
-          }
-        };
-      
-        // 初始化主题切换按钮状态
-        updateThemeToggleBtn(currentTheme);
-      
-      themeToggleBtn?.addEventListener('click', () => {
-        const currentTheme = document.documentElement.getAttribute('data-theme');
-        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-        
-        document.documentElement.setAttribute('data-theme', newTheme);
-        localStorage.setItem('theme', newTheme);
-        
-        updateThemeToggleBtn(newTheme);
-      });
-      
-      // 背景图功能 - 默认启用，但深色模式下禁用
-      const initialBg = localStorage.getItem('has-background') !== 'false';
-      // 使用已经声明的currentTheme变量
-      if (initialBg && currentTheme !== 'dark') {
-        document.body.classList.add('has-background');
-      }
-      localStorage.setItem('has-background', 'true');
-      
-      // 背景蒙板控制按钮功能
-      const maskToggleBtn = document.getElementById('mask-toggle-btn');
-      
-      // 更新背景蒙板控制按钮状态的辅助函数
-      const updateMaskToggleBtn = () => {
-        const icon = maskToggleBtn?.querySelector('.material-symbols-outlined');
-        const hasBackground = document.body.classList.contains('has-background');
-        if (icon) {
-          icon.textContent = hasBackground ? 'visibility' : 'visibility_off';
-        }
-        if (maskToggleBtn) {
           maskToggleBtn.classList.toggle('active', hasBackground);
-        }
-      };
-      
-      // 初始化背景蒙板控制按钮状态
-      updateMaskToggleBtn();
-      
-      // 背景蒙板控制按钮点击事件
-      maskToggleBtn?.addEventListener('click', () => {
-        const hasBackground = document.body.classList.contains('has-background');
+        },
         
-        if (hasBackground) {
-          document.body.classList.remove('has-background');
-          localStorage.setItem('has-background', 'false');
-        } else {
-          // 只有在非深色模式下才能启用背景图
-          const currentTheme = document.documentElement.getAttribute('data-theme');
-          if (currentTheme !== 'dark') {
+        // 切换背景图显示状态
+        toggle() {
+          const hasBackground = document.body.classList.contains('has-background');
+          
+          if (hasBackground) {
+            document.body.classList.remove('has-background');
+            localStorage.setItem('has-background', 'false');
+          } else {
             document.body.classList.add('has-background');
             localStorage.setItem('has-background', 'true');
           }
+          
+          this.updateToggleBtn();
         }
-        
-        updateMaskToggleBtn();
+      };
+      
+      // 初始化背景图控制
+      BackgroundControl.init();
+      
+      // 背景蒙板控制按钮点击事件
+      const maskToggleBtn = document.getElementById('mask-toggle-btn');
+      maskToggleBtn?.addEventListener('click', () => {
+        BackgroundControl.toggle();
       });
       
-      // 主题切换时管理背景图
-      // 使用已经声明的themeToggleBtn变量
-      themeToggleBtn?.addEventListener('click', () => {
-        const newTheme = document.documentElement.getAttribute('data-theme');
-        if (newTheme === 'dark') {
-          document.body.classList.remove('has-background');
-        } else if (localStorage.getItem('has-background') !== 'false') {
-          document.body.classList.add('has-background');
-        }
-        
-        // 更新背景蒙板控制按钮状态
-        updateMaskToggleBtn();
-      });
+
       
       // 确保侧边栏在所有页面中都有一致的间距
       const alignSidebars = () => {
@@ -306,21 +273,7 @@ const {
         });
       });
       
-      // 监听系统主题变化
-      window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
-        // 只有当用户没有明确设置主题时，才自动跟随系统主题
-        if (!localStorage.getItem('theme')) {
-          const newTheme = e.matches ? 'dark' : 'light';
-          document.documentElement.setAttribute('data-theme', newTheme);
-          updateThemeToggleBtn(newTheme);
-          // 同时管理背景图
-          if (newTheme === 'dark') {
-            document.body.classList.remove('has-background');
-          } else if (localStorage.getItem('has-background') !== 'false') {
-            document.body.classList.add('has-background');
-          }
-        }
-      });
+
 
       // 移动端菜单
       const mobileMenuBtn = document.querySelector('.mobile-menu-btn');

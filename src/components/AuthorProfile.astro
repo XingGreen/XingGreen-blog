@@ -34,7 +34,7 @@ const {
 ---
 
 <div class="author-profile">
-  <div class="profile-card">
+  <div class="profile-card glass">
     <div class="avatar-container">
       <img src={avatar} alt={`${name}的头像`} class="author-avatar" loading="lazy" width="150" height="150" />
     </div>
@@ -65,14 +65,16 @@ const {
 }
 
 .profile-card {
-  background: var(--md3-surface);
-  border: 2px solid var(--accent-primary);
   border-radius: var(--border-radius-lg);
   padding: 2rem;
   text-align: center;
-  backdrop-filter: blur(10px);
-  box-shadow: var(--shadow-concave-convex);
   transition: var(--transition);
+  border: 2px solid var(--accent-primary) !important;
+  box-shadow: var(--shadow-concave-convex);
+}
+
+.profile-card.glass {
+  backdrop-filter: blur(20px);
 }
 
 .profile-card:hover {

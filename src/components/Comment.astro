@@ -33,12 +33,6 @@ const emoji = featureConfig.comment.config.emoji;
   import { init } from '@waline/client';
   import '@waline/client/dist/waline.css';
   
-  // 获取当前主题
-  const getCurrentTheme = () => {
-    return document.documentElement.getAttribute('data-theme') || 
-           (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
-  };
-  
   // 初始化 Waline
   const waline = init({
     el: '#waline-comments',
@@ -49,27 +43,11 @@ const emoji = featureConfig.comment.config.emoji;
     login: login,
     pageSize: pageSize,
     emoji: emoji,
-    dark: getCurrentTheme() === 'dark' ? 'auto' : 'light'
+    dark: 'light'
   });
   
   // 保存 Waline 实例到全局对象
   window.Waline = waline;
-  
-  // 监听主题变化
-  const observer = new MutationObserver((mutations) => {
-    mutations.forEach((mutation) => {
-      if (mutation.type === 'attributes' && mutation.attributeName === 'data-theme') {
-        const newTheme = mutation.target.getAttribute('data-theme');
-        waline.update({ dark: newTheme === 'dark' ? 'auto' : 'light' });
-      }
-    });
-  });
-  
-  // 观察主题属性变化
-  observer.observe(document.documentElement, {
-    attributes: true,
-    attributeFilter: ['data-theme']
-  });
   
   // 添加「喵～」气泡效果
   const addMeowBubble = () => {

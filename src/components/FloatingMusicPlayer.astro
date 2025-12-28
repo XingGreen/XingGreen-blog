@@ -452,11 +452,7 @@ const sampleSong = {
     transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
   }
   
-  /* 深色模式下的玻璃态效果 */
-  [data-theme="dark"] .glass-effect {
-    background: rgba(17, 24, 39, 0.85);
-    border: 1px solid rgba(75, 85, 99, 0.3);
-  }
+
   
   .floating-music-player {
     position: fixed !important;
@@ -711,11 +707,7 @@ const sampleSong = {
     -webkit-backdrop-filter: blur(8px);
   }
   
-  /* 深色模式下的按钮样式 */
-  [data-theme="dark"] .control-btn {
-    background: linear-gradient(145deg, rgba(31, 41, 55, 0.6), rgba(55, 65, 81, 0.4));
-    border: 1px solid rgba(75, 85, 99, 0.4);
-  }
+
   
   .control-btn::before {
     content: '';
@@ -743,10 +735,7 @@ const sampleSong = {
     outline: none;
   }\n  \n  /* 焦点状态样式 */\n  .control-btn:focus::after {\n    content: '';\n    position: absolute;\n    top: 50%;\n    left: 50%;\n    width: calc(100% + 8px);\n    height: calc(100% + 8px);\n    border-radius: var(--border-radius-md);\n    border: 2px solid rgba(5, 150, 105, 0.8);\n    transform: translate(-50%, -50%);\n    animation: focusRingPulse 1.5s infinite;\n  }\n  \n  @keyframes focusRingPulse {\n    0% {\n      transform: translate(-50%, -50%) scale(1);\n      opacity: 1;\n    }\n    100% {\n      transform: translate(-50%, -50%) scale(1.2);\n      opacity: 0;\n    }\n  }
   
-  [data-theme="dark"] .control-btn:hover {
-    background: linear-gradient(145deg, rgba(55, 65, 81, 0.8), rgba(75, 85, 99, 0.6));
-    border-color: rgba(107, 114, 128, 0.6);
-  }
+
   
   .control-btn:active {
     transform: translateY(-1px) scale(0.98);
@@ -832,19 +821,14 @@ const sampleSong = {
     position: relative;
   }
   
-  /* 深色模式下的进度条背景 */
-  [data-theme="dark"] .progress-bar {
-    background: rgba(75, 85, 99, 0.3);
-  }
+
   
   .progress-bar:hover {
     height: 10px;
     background: var(--bg-tertiary);
   }
   
-  [data-theme="dark"] .progress-bar:hover {
-    background: rgba(75, 85, 99, 0.4);
-  }
+
   
   .progress-fill {
     height: 100%;
@@ -917,19 +901,14 @@ const sampleSong = {
     box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.1), inset 0 1px 3px rgba(0, 0, 0, 0.15);
   }
   
-  /* 深色模式下的音量滑块背景 */
-  [data-theme="dark"] .volume-slider {
-    background: rgba(75, 85, 99, 0.3);
-  }
+
   
   .volume-slider:hover {
     height: 8px;
     background: var(--bg-tertiary);
   }
   
-  [data-theme="dark"] .volume-slider:hover {
-    background: rgba(75, 85, 99, 0.4);
-  }
+
   
   /* Webkit浏览器样式 */
   .volume-slider::-webkit-slider-thumb {
@@ -987,9 +966,7 @@ const sampleSong = {
     border-radius: 3px;
   }
   
-  [data-theme="dark"] .volume-slider::-webkit-slider-runnable-track {
-    background: linear-gradient(to right, var(--accent-gradient) 0%, var(--accent-gradient) 100%, rgba(75, 85, 99, 0.3) 100%);
-  }
+
   
   .volume-slider::-moz-range-track {
     height: 100%;
@@ -998,9 +975,7 @@ const sampleSong = {
     border: none;
   }
   
-  [data-theme="dark"] .volume-slider::-moz-range-track {
-    background: linear-gradient(to right, var(--accent-gradient) 0%, var(--accent-gradient) 100%, rgba(75, 85, 99, 0.3) 100%);
-  }
+
   
   /* 音量按钮样式 */
   .volume-btn {

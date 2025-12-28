@@ -103,7 +103,6 @@ const activityData = processBlogData();
     };
     
     // 设置图表主题颜色
-    const theme = document.documentElement.getAttribute('data-theme') || 'light';
     const accentPrimary = getCSSVar('--accent-primary');
     const accentGradient = getCSSVar('--accent-gradient');
     const bgPrimary = getCSSVar('--bg-primary');
@@ -124,7 +123,7 @@ const activityData = processBlogData();
     
     const colors = {
       primary: accentColor,
-      secondary: theme === 'dark' ? '#8b5cf6' : '#9333ea',
+      secondary: '#9333ea',
       background: bgTertiary,
       text: textPrimary,
       grid: textSecondary,
@@ -291,13 +290,7 @@ const activityData = processBlogData();
       });
     }
     
-    // 监听主题变化，更新图表颜色
-    const themeToggleBtn = document.querySelector('.theme-toggle-btn');
-    if (themeToggleBtn) {
-      themeToggleBtn.addEventListener('click', () => {
-        window.location.reload(); // 简单的方式：重新加载页面以更新图表主题
-      });
-    }
+
   });
 </script>
 

@@ -1,0 +1,238 @@
+<script>
+  let canvas, ctx;
+  let particles = [];
+  let mouse = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
+  let animationId;
+  let isReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let lastMouseUpdate = 0;
+  const mouseUpdateThreshold = 100; // 鼠标更新阈值(ms)
+  
+  // 根据设备性能和屏幕大小动态调整参数
+  let particleCount = window.innerWidth < 768 ? 25 : 50;
+  let connectionDistance = window.innerWidth < 768 ? 100 : 150;
+  let repulsionRadius = window.innerWidth < 768 ? 75 : 100;
+
+  // 粒子类
+  class Particle {
+    constructor() {
+      this.reset();
+      this.originalX = this.x;
+      this.originalY = this.y;
+      this.speedX = (Math.random() - 0.5) * 0.5;
+      this.speedY = (Math.random() - 0.5) * 0.5;
+      this.radius = Math.random() * 2 + 1;
+      this.hue = Math.random() * 120 + 80; // 绿色系
+      this.alpha = Math.random() * 0.5 + 0.3;
+    }
+
+    reset() {
+      this.x = Math.random() * canvas.width;
+      this.y = Math.random() * canvas.height;
+    }
+
+    update() {
+      // 鼠标排斥效果
+      const dx = this.x - mouse.x;
+      const dy = this.y - mouse.y;
+      const distance = Math.sqrt(dx * dx + dy * dy);
+
+      if (distance < repulsionRadius) {
+        const force = (repulsionRadius - distance) / repulsionRadius;
+        const angle = Math.atan2(dy, dx);
+        this.x += Math.cos(angle) * force * 2;
+        this.y += Math.sin(angle) * force * 2;
+      } else {
+        // 恢复到原始轨迹
+        this.x += this.speedX;
+        this.y += this.speedY;
+      }
+
+      // 边界检测
+      if (this.x < 0 || this.x > canvas.width) this.speedX *= -1;
+      if (this.y < 0 || this.y > canvas.height) this.speedY *= -1;
+
+      // 防止粒子移出画布太远
+      if (this.x < -50) this.x = canvas.width + 50;
+      if (this.x > canvas.width + 50) this.x = -50;
+      if (this.y < -50) this.y = canvas.height + 50;
+      if (this.y > canvas.height + 50) this.y = -50;
+    }
+
+    draw() {
+      // 光晕效果
+      const gradient = ctx.createRadialGradient(
+        this.x, this.y, 0,
+        this.x, this.y, this.radius * 4
+      );
+      gradient.addColorStop(0, `hsla(${this.hue}, 70%, 60%, ${this.alpha})`);
+      gradient.addColorStop(0.5, `hsla(${this.hue}, 70%, 60%, ${this.alpha * 0.3})`);
+      gradient.addColorStop(1, `hsla(${this.hue}, 70%, 60%, 0)`);
+
+      ctx.fillStyle = gradient;
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, this.radius * 4, 0, Math.PI * 2);
+      ctx.fill();
+
+      // 粒子核心
+      ctx.fillStyle = `hsla(${this.hue}, 70%, 60%, ${this.alpha})`;
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    connect(particles) {
+      particles.forEach(particle => {
+        const dx = this.x - particle.x;
+        const dy = this.y - particle.y;
+        const distance = Math.sqrt(dx * dx + dy * dy);
+
+        if (distance < connectionDistance) {
+          const opacity = (1 - distance / connectionDistance) * 0.2;
+          ctx.strokeStyle = `hsla(${this.hue}, 70%, 60%, ${opacity})`;
+          ctx.lineWidth = 0.5;
+          ctx.beginPath();
+          ctx.moveTo(this.x, this.y);
+          ctx.lineTo(particle.x, particle.y);
+          ctx.stroke();
+        }
+      });
+    }
+  }
+
+  // 初始化
+  function init() {
+    if (isReducedMotion) return;
+    
+    canvas = document.getElementById('particle-canvas');
+    ctx = canvas.getContext('2d');
+    resizeCanvas();
+    
+    // 创建粒子
+    particles = [];
+    for (let i = 0; i < particleCount; i++) {
+      particles.push(new Particle());
+    }
+    
+    // 事件监听
+    window.addEventListener('resize', resizeCanvas);
+    window.addEventListener('mousemove', handleMouseMove);
+    window.addEventListener('touchmove', handleTouchMove);
+    
+    // 开始动画
+    animate();
+  }
+
+  // 调整画布大小
+  function resizeCanvas() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    
+    // 根据新的屏幕尺寸动态调整粒子参数
+    particleCount = window.innerWidth < 768 ? 25 : 50;
+    connectionDistance = window.innerWidth < 768 ? 100 : 150;
+    repulsionRadius = window.innerWidth < 768 ? 75 : 100;
+    
+    // 更新粒子数量
+    if (particles.length < particleCount) {
+      for (let i = particles.length; i < particleCount; i++) {
+        particles.push(new Particle());
+      }
+    } else if (particles.length > particleCount) {
+      particles = particles.slice(0, particleCount);
+    }
+    
+    // 重新初始化粒子位置
+    particles.forEach(particle => particle.reset());
+  }
+
+  // 鼠标移动（节流优化）
+  function handleMouseMove(e) {
+    const now = Date.now();
+    if (now - lastMouseUpdate > mouseUpdateThreshold) {
+      mouse.x = e.clientX;
+      mouse.y = e.clientY;
+      lastMouseUpdate = now;
+    }
+  }
+
+  // 触摸移动（节流优化）
+  function handleTouchMove(e) {
+    const now = Date.now();
+    if (now - lastMouseUpdate > mouseUpdateThreshold) {
+      if (e.touches.length > 0) {
+        mouse.x = e.touches[0].clientX;
+        mouse.y = e.touches[0].clientY;
+        e.preventDefault();
+        lastMouseUpdate = now;
+      }
+    }
+  }
+
+  // 动画循环
+  function animate() {
+    if (isReducedMotion) return;
+    
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    
+    // 更新和绘制粒子
+    particles.forEach(particle => {
+      particle.update();
+      particle.draw();
+      particle.connect(particles);
+    });
+    
+    animationId = requestAnimationFrame(animate);
+  }
+
+  // 清理
+  function cleanup() {
+    window.removeEventListener('resize', resizeCanvas);
+    window.removeEventListener('mousemove', handleMouseMove);
+    window.removeEventListener('touchmove', handleTouchMove);
+    if (animationId) {
+      cancelAnimationFrame(animationId);
+    }
+  }
+
+  // 初始化
+  window.addEventListener('DOMContentLoaded', init);
+  // 组件卸载时清理
+  window.addEventListener('beforeunload', cleanup);
+</script>
+
+<style>
+  .particle-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    pointer-events: none;
+    overflow: hidden;
+  }
+
+  #particle-canvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  /* 支持减少动画 */
+  @media (prefers-reduced-motion: reduce) {
+    .particle-background {
+      display: none;
+    }
+  }
+
+  /* 移动端优化 */
+  @media (max-width: 768px) {
+    .particle-background {
+      /* 移动端可以减少粒子数量或降低效果 */
+    }
+  }
+</style>
+
+<div class="particle-background">
+  <canvas id="particle-canvas"></canvas>
+</div>
