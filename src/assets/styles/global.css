@@ -1,4 +1,4 @@
-/* 主题颜色变量 - 优化版（增强对比度和可读性） */
+/* 主题颜色变量 - 现代化设计版 */
 :root {
   /* 浅色主题 */
   --bg-primary: #ffffff;
@@ -6,6 +6,14 @@
   --bg-tertiary: #f1f3f5;
   --bg-hover: #f8f9fa;
   --bg-active: #e9ecef;
+  
+  /* 渐变背景 - 增强现代化设计 */
+  --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  --gradient-secondary: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  --gradient-tertiary: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+  --gradient-accent: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+  --gradient-subtle: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+  --gradient-card: linear-gradient(135deg, #ffffff 0%, #fafbfc 100%);
   
   /* 文本颜色 - 优化对比度和可读性 */
   --text-primary: #0f172a;
@@ -30,16 +38,21 @@
   --card-hover: #fafbfc;
   --card-active: #f1f3f5;
   
-  /* 阴影系统 - 增强视觉层次 */
+  /* 阴影系统 - 增强视觉层次和深度 */
   --shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
   --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
   --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
   --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
   --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
   --shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  --shadow-3xl: 0 35px 60px -15px rgba(0, 0, 0, 0.3);
   /* 内阴影 */
   --shadow-inner-sm: inset 0 2px 4px 0 rgba(0, 0, 0, 0.05);
   --shadow-inner-md: inset 0 4px 6px -1px rgba(0, 0, 0, 0.1), inset 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  /* 发光效果 */
+  --shadow-glow-sm: 0 0 10px rgba(102, 126, 234, 0.3);
+  --shadow-glow-md: 0 0 20px rgba(102, 126, 234, 0.5);
+  --shadow-glow-lg: 0 0 30px rgba(102, 126, 234, 0.7);
   
   /* 软糖按钮样式 */
   --btn-gummy-radius: 28px;
@@ -1212,12 +1225,16 @@ a:hover {
 /* Stats Card Specific Styles */
 .stats-card {
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  background: var(--gradient-card);
+  border-radius: var(--border-radius-lg);
+  overflow: hidden;
 }
 
 .stats-card-content {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  padding: 2rem;
 }
 
 /* Material Symbols Outlined */
@@ -1240,27 +1257,35 @@ a:hover {
 }
 
 .stats-info h4 {
-  color: var(--md3-on-surface-variant);
+  color: var(--text-secondary);
   margin: 0 0 0.5rem 0;
   font-weight: 500;
   font-size: 1rem;
+  letter-spacing: 0.025em;
 }
 
 .stats-info p {
-  color: var(--md3-on-surface);
+  color: var(--text-primary);
   margin: 0;
-  font-size: 2rem;
+  font-size: 2.5rem;
   font-weight: 700;
+  background: var(--gradient-primary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 .stats-icon {
-  width: 60px;
-  height: 60px;
-  border-radius: 12px;
+  width: 70px;
+  height: 70px;
+  border-radius: var(--border-radius-lg);
   display: flex;
   align-items: center;
   justify-content: center;
   color: white;
+  background: var(--gradient-primary);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 8px 16px rgba(102, 126, 234, 0.3);
 }
 
 .stats-icon .material-symbols-outlined {
@@ -1268,8 +1293,14 @@ a:hover {
 }
 
 .stats-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15);
+  transform: translateY(-8px);
+  box-shadow: var(--shadow-xl), var(--shadow-glow-sm);
+}
+
+.stats-card:hover .stats-icon {
+  transform: scale(1.1);
+  box-shadow: 0 12px 24px rgba(102, 126, 234, 0.5), var(--shadow-glow-md);
+  background: var(--gradient-secondary);
 }
 
 /* Navigation */
@@ -2511,6 +2542,15 @@ footer {
     padding: 1rem !important;
   }
   
+  /* 博客卡片在小屏手机上的优化 */
+  .blog-card {
+    padding: 1rem !important;
+  }
+  
+  .card-image-wrapper {
+    aspect-ratio: 16 / 9 !important;
+  }
+  
   /* 小屏手机排版优化 */
   h1 {
     font-size: 1.75rem !important;
@@ -2524,14 +2564,36 @@ footer {
     font-size: 1.25rem !important;
   }
   
+  h4 {
+    font-size: 1.1rem !important;
+  }
+  
+  p {
+    font-size: 0.95rem !important;
+    line-height: 1.6 !important;
+  }
+  
   /* 小屏手机统计网格优化 */
   .stats-grid {
     grid-template-columns: 1fr !important;
     gap: 1.5rem !important;
   }
   
+  /* 小屏手机博客网格优化 */
+  .blog-grid {
+    grid-template-columns: 1fr !important;
+    gap: 1.5rem !important;
+  }
+  
+  /* 小屏手机特性网格优化 */
+  .features-grid {
+    grid-template-columns: 1fr !important;
+    gap: 1.5rem !important;
+  }
+  
   /* 小屏手机页脚优化 */
   .footer-content {
+    grid-template-columns: 1fr !important;
     gap: 1.5rem !important;
   }
   
@@ -2544,6 +2606,337 @@ footer {
   .cat-message {
     max-width: 150px !important;
     font-size: 11px !important;
+  }
+  
+  /* 小屏手机按钮优化 */
+  .btn {
+    padding: 0.75rem 1.5rem !important;
+    font-size: 0.9rem !important;
+  }
+  
+  .btn-lg {
+    padding: 0.875rem 1.75rem !important;
+    font-size: 1rem !important;
+  }
+  
+  .btn-sm {
+    padding: 0.5rem 1rem !important;
+    font-size: 0.8rem !important;
+  }
+  
+  /* 小屏手机导航按钮优化 */
+  .nav-btn {
+    width: 40px !important;
+    height: 40px !important;
+    padding: 0.5rem !important;
+  }
+  
+  /* 小屏手机移动端菜单优化 */
+  .mobile-nav-menu.active {
+    width: 95% !important;
+  }
+  
+  .mobile-nav-items a {
+    padding: 1rem 0.75rem !important;
+    font-size: 1rem !important;
+  }
+  
+  /* 小屏手机移动端功能按钮优化 */
+  .mobile-nav-action-btn {
+    padding: 1rem !important;
+    font-size: 0.95rem !important;
+  }
+  
+  /* 小屏手机移动端搜索框优化 */
+  .mobile-search-form {
+    padding: 0.75rem 1rem !important;
+  }
+  
+  .mobile-search-input {
+    font-size: 0.9rem !important;
+    padding: 0.75rem !important;
+  }
+  
+  /* 小屏手机Hero区域优化 */
+  .hero {
+    min-height: 50vh !important;
+    padding: 2rem 1rem !important;
+  }
+  
+  .hero-title {
+    font-size: 2rem !important;
+    margin-bottom: 0.75rem !important;
+  }
+  
+  .hero-subtitle {
+    font-size: 1rem !important;
+    margin-bottom: 1.5rem !important;
+  }
+  
+  /* 小屏手机标签优化 */
+  .tag {
+    padding: 0.35rem 0.8rem !important;
+    font-size: 0.75rem !important;
+  }
+  
+  /* 小屏手机卡片元数据优化 */
+  .card-meta {
+    gap: 1rem !important;
+    font-size: 0.8rem !important;
+  }
+  
+  /* 小屏手机卡片标题优化 */
+  .card-title {
+    font-size: 1.35rem !important;
+    margin: 1rem 0 0.75rem !important;
+  }
+  
+  /* 小屏手机卡片摘要优化 */
+  .card-excerpt {
+    margin-bottom: 1rem !important;
+    font-size: 0.95rem !important;
+  }
+  
+  /* 小屏手机统计卡片优化 */
+  .stats-card {
+    padding: 1.25rem !important;
+  }
+  
+  .stats-info p {
+    font-size: 1.75rem !important;
+  }
+  
+  .stats-info h4 {
+    font-size: 0.9rem !important;
+  }
+  
+  .stats-icon {
+    width: 50px !important;
+    height: 50px !important;
+  }
+  
+  .stats-icon .material-symbols-outlined {
+    font-size: 2rem !important;
+  }
+  
+  /* 小屏手机滚动到顶部按钮优化 */
+  .scroll-to-top-btn {
+    width: 44px !important;
+    height: 44px !important;
+    bottom: 12px !important;
+    right: 12px !important;
+  }
+  
+  /* 小屏手机代码块优化 */
+  .markdown-content pre {
+    font-size: 0.75rem !important;
+    padding: 0.75rem !important;
+  }
+  
+  /* 小屏手机提示容器优化 */
+  .markdown-content .prompt-container {
+    padding: 0.75rem !important;
+    margin: 0.75rem 0 !important;
+  }
+  
+  /* 小屏手机输入框优化 */
+  input,
+  textarea,
+  select {
+    min-height: 44px !important;
+    padding: 0.75rem 1rem !important;
+    font-size: 0.95rem !important;
+  }
+  
+  /* 小屏手机按钮优化 */
+  button,
+  a,
+  .btn,
+  .control-btn,
+  .theme-toggle-btn,
+  .music-player-btn,
+  .mobile-menu-btn,
+  .mobile-close-btn,
+  .close-btn,
+  .play-btn {
+    min-height: 44px !important;
+    min-width: 44px !important;
+  }
+  
+  /* 小屏手机导航链接优化 */
+  .nav-link {
+    padding: 0.75rem !important;
+    font-size: 0.9rem !important;
+  }
+  
+  /* 小屏手机移动端导航链接优化 */
+  .mobile-nav-link {
+    padding: 1rem !important;
+    font-size: 1rem !important;
+  }
+  
+  /* 小屏手机移动端功能按钮优化 */
+  .mobile-nav-actions .btn-icon {
+    padding: 1rem !important;
+    font-size: 0.95rem !important;
+  }
+  
+  /* 小屏手机几何装饰元素优化 */
+  .geometric-decor {
+    display: none !important;
+  }
+  
+  /* 小屏手机Hero装饰元素优化 */
+  .hero-decor {
+    width: 80px !important;
+    height: 80px !important;
+  }
+}
+
+/* 触控设备优化 */
+@media (hover: none) and (pointer: coarse) {
+  /* 移除悬停效果，改为点击效果 */
+  .nav-link:hover {
+    transform: none !important;
+  }
+  
+  .btn:hover {
+    transform: none !important;
+    box-shadow: var(--btn-gummy-shadow) !important;
+  }
+  
+  .card:hover {
+    transform: none !important;
+    box-shadow: var(--shadow-md) !important;
+  }
+  
+  .blog-card:hover {
+    transform: none !important;
+    box-shadow: var(--shadow-lg) !important;
+  }
+  
+  .tag:hover {
+    transform: none !important;
+    box-shadow: none !important;
+  }
+  
+  .link-hover-effect:hover {
+    transform: none !important;
+  }
+  
+  .img-hover-zoom:hover img {
+    transform: none !important;
+  }
+  
+  /* 增强点击反馈 */
+  button:active,
+  a:active,
+  .btn:active,
+  .control-btn:active,
+  .theme-toggle-btn:active,
+  .music-player-btn:active,
+  .mobile-menu-btn:active,
+  .mobile-close-btn:active,
+  .close-btn:active,
+  .play-btn:active {
+    transform: scale(0.95) !important;
+    transition: transform 0.1s ease !important;
+  }
+  
+  /* 增强卡片点击反馈 */
+  .card:active,
+  .blog-card:active {
+    transform: scale(0.98) !important;
+    transition: transform 0.1s ease !important;
+  }
+  
+  /* 增强链接点击反馈 */
+  .link-hover-effect:active {
+    color: var(--accent-primary) !important;
+  }
+  
+  /* 增强标签点击反馈 */
+  .tag:active {
+    transform: scale(0.95) !important;
+    transition: transform 0.1s ease !important;
+  }
+}
+
+/* 宽屏设备优化 */
+@media (min-width: 1400px) {
+  /* 宽屏容器优化 */
+  .container {
+    max-width: 1400px !important;
+    padding: 0 2rem !important;
+  }
+  
+  /* 宽屏布局优化 */
+  .main-layout {
+    padding: 5rem 2.5rem !important;
+  }
+  
+  /* 宽屏博客网格优化 */
+  .blog-grid {
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)) !important;
+    gap: 3rem !important;
+  }
+  
+  /* 宽屏统计网格优化 */
+  .stats-grid {
+    grid-template-columns: repeat(4, 1fr) !important;
+    gap: 2rem !important;
+  }
+  
+  /* 宽屏特性网格优化 */
+  .features-grid {
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 2.5rem !important;
+  }
+  
+  /* 宽屏侧边栏优化 */
+  .sidebar-left,
+  .sidebar-right {
+    flex: 0 0 300px !important;
+  }
+  
+  /* 宽屏Hero区域优化 */
+  .hero {
+    min-height: 75vh !important;
+    padding: 5rem 2rem !important;
+  }
+}
+
+/* 横屏手机优化 */
+@media (max-width: 768px) and (orientation: landscape) {
+  /* 横屏手机Hero区域优化 */
+  .hero {
+    min-height: 80vh !important;
+  }
+  
+  /* 横屏手机统计网格优化 */
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 1.25rem !important;
+  }
+  
+  /* 横屏手机博客网格优化 */
+  .blog-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 1.5rem !important;
+  }
+  
+  /* 横屏手机特性网格优化 */
+  .features-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 1.5rem !important;
+  }
+  
+  /* 横屏手机Live2D猫优化 */
+  .live2d-cat {
+    width: 70px !important;
+    height: 70px !important;
+    bottom: 10px !important;
+    right: 10px !important;
   }
 }
 
@@ -2559,12 +2952,14 @@ footer {
   }
 }
 
-/* Scroll Animations */
+/* Scroll Animations - 增强版 */
 .scroll-animation {
   opacity: 0;
   transform: translateY(30px);
   transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
   will-change: opacity, transform; /* 提示浏览器优化动画 */
+  backface-visibility: hidden; /* 防止动画抖动 */
+  perspective: 1000px; /* 增强3D效果 */
 }
 
 .scroll-animation.active {
@@ -2682,6 +3077,382 @@ footer {
 
 .stagger-container > .scroll-animation {
   transition-delay: calc(var(--stagger-delay, 0.1s) * var(--stagger-index));
+}
+
+/* 微交互效果 - 增强版 */
+/* 按钮点击涟漪效果增强 */
+.ripple::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.6);
+  transform: translate(-50%, -50%);
+  transition: width 0.6s, height 0.6s, opacity 0.6s;
+  pointer-events: none;
+  opacity: 0;
+}
+
+.ripple:active::after {
+  width: 300px;
+  height: 300px;
+  opacity: 1;
+}
+
+/* 按钮悬停效果增强 */
+.btn-hover-effect {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-hover-effect:hover {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: var(--shadow-lg);
+}
+
+.btn-hover-effect:active {
+  transform: translateY(0) scale(0.98);
+  box-shadow: var(--shadow-sm);
+}
+
+/* 卡片悬停效果增强 */
+.card-hover-effect {
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.card-hover-effect:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: var(--shadow-xl);
+}
+
+/* 链接悬停效果增强 */
+.link-hover-effect {
+  position: relative;
+  display: inline-block;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.link-hover-effect::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: var(--accent-gradient);
+  transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: 1px;
+}
+
+/* 尊重用户的减少动画偏好 */
+@media (prefers-reduced-motion: reduce) {
+  /* 禁用所有动画和过渡效果 */
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+    will-change: auto !important;
+  }
+  
+  /* 禁用特定组件的动画 */
+  .scroll-animation,
+  .fade-in,
+  .hero-background-image,
+  .hero-decor,
+  .card,
+  .blog-card,
+  .stats-card,
+  .btn,
+  .nav-link,
+  .tag,
+  .live2d-cat {
+    animation: none !important;
+    transition: none !important;
+  }
+  
+  /* 确保滚动动画元素立即显示 */
+  .scroll-animation {
+    opacity: 1 !important;
+    transform: translate(0, 0) scale(1) rotate(0deg) !important;
+  }
+  
+  .fade-in {
+    opacity: 1 !important;
+  }
+  
+  /* 禁用背景图片动画 */
+  .hero-background-image {
+    transform: none !important;
+  }
+  
+  /* 禁用装饰元素动画 */
+  .hero-decor {
+    animation: none !important;
+    transform: none !important;
+  }
+  
+  /* 禁用卡片悬停效果 */
+  .card:hover,
+  .blog-card:hover,
+  .stats-card:hover {
+    transform: none !important;
+    box-shadow: none !important;
+  }
+  
+  /* 禁用按钮动画 */
+  .btn:hover {
+    transform: none !important;
+    box-shadow: none !important;
+  }
+  
+  /* 禁用标签动画 */
+  .tag:hover {
+    transform: none !important;
+    box-shadow: none !important;
+  }
+  
+  /* 禁用Live2D猫动画 */
+  .live2d-cat:hover .cat-image {
+    transform: none !important;
+  }
+  
+  /* 禁用页面加载动画 */
+  body {
+    animation: none !important;
+  }
+}
+
+.link-hover-effect:hover {
+  transform: translateX(4px);
+  color: var(--accent-primary);
+}
+
+.link-hover-effect:hover::after {
+  width: 100%;
+}
+
+/* 图片悬停缩放效果 */
+.img-hover-zoom {
+  transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
+}
+
+.img-hover-zoom:hover img {
+  transform: scale(1.05);
+}
+
+/* 页面加载动画 */
+@keyframes pageFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+body {
+  animation: pageFadeIn 0.5s ease-in-out;
+}
+
+/* 旋转动画 */
+@keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.rotate {
+  animation: rotate 20s linear infinite;
+}
+
+/* 脉冲动画 */
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 0.8;
+  }
+}
+
+.pulse {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+/* 心跳动画 */
+@keyframes heartbeat {
+  0%, 100% {
+    transform: scale(1);
+  }
+  14% {
+    transform: scale(1.1);
+  }
+  28% {
+    transform: scale(1);
+  }
+  42% {
+    transform: scale(1.1);
+  }
+  70% {
+    transform: scale(1);
+  }
+}
+
+.heartbeat {
+  animation: heartbeat 1.5s ease-in-out infinite;
+}
+
+/* 浮动动画 */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
+}
+
+.float {
+  animation: float 6s ease-in-out infinite;
+}
+
+/* 摇摆动画 */
+@keyframes swing {
+  0%, 100% {
+    transform: rotate(0deg);
+  }
+  25% {
+    transform: rotate(5deg);
+  }
+  75% {
+    transform: rotate(-5deg);
+  }
+}
+
+.swing {
+  animation: swing 3s ease-in-out infinite;
+}
+
+/* 闪烁动画 */
+@keyframes blink {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.blink {
+  animation: blink 2s ease-in-out infinite;
+}
+
+/* 打字机效果 */
+@keyframes typing {
+  from {
+    width: 0;
+  }
+  to {
+    width: 100%;
+  }
+}
+
+@keyframes blink-caret {
+  from, to {
+    border-color: transparent;
+  }
+  50% {
+    border-color: currentColor;
+  }
+}
+
+.typewriter {
+  overflow: hidden;
+  border-right: 0.15em solid var(--accent-primary);
+  white-space: nowrap;
+  margin: 0 auto;
+  animation: typing 3.5s steps(40, end), blink-caret 0.75s step-end infinite;
+}
+
+/* 背景渐变动画 */
+@keyframes gradientShift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.gradient-animate {
+  background-size: 200% 200%;
+  animation: gradientShift 8s ease infinite;
+}
+
+/* 骨架屏动画 */
+@keyframes skeletonLoading {
+  0% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.skeleton {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: skeletonLoading 1.5s infinite;
+  border-radius: var(--border-radius-md);
+}
+
+/* 滚动条样式 */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-tertiary);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--accent-primary);
+  border-radius: 4px;
+  transition: all 0.3s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent-secondary);
+  transform: scale(1.1);
+}
+
+/* 选择文本样式 */
+::selection {
+  background: var(--accent-primary);
+  color: white;
+}
+
+::-moz-selection {
+  background: var(--accent-primary);
+  color: white;
 }
 
 @keyframes slideInLeft {

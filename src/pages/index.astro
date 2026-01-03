@@ -52,33 +52,35 @@ blogStats.forEach(stat => {
   <Hero 
     title={randomMessage}
     subtitle="Move on, walk alone. Nothing lasts. Life is short ——no regrets."
+    ctaText="浏览文章"
+    ctaLink="/blog/"
   />
 
-  <section>
+  <!-- 博客文章列表 -->
+  <section class="blog-section">
     <div class="container">
-
-
-      <!-- 博客文章列表 -->
-      <div class="blog-section">
-        <div class="section-header">
-          <h2>最新文章</h2>
-        </div>
-        
-        <div class="blog-grid stagger-container">
-          {blogPosts.map((post, index) => (
-            <div class={`scroll-animation ${index % 3 === 0 ? 'left' : index % 3 === 1 ? 'right' : 'bottom'} scale`} style={{ '--stagger-index': index + 1 }}>
-              <BlogCard
-                title={post.title}
-                excerpt={post.excerpt}
-                date={post.date}
-                category={post.category}
-                tags={post.tags}
-                author={post.author}
-                slug={post.slug}
-              />
-            </div>
-          ))}
-        </div>
+      <div class="section-header">
+        <h2>最新文章</h2>
+        <a href="/blog/" class="btn btn-outline">
+          <span>查看全部</span>
+          <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span>
+        </a>
+      </div>
+      
+      <div class="blog-grid stagger-container">
+        {blogPosts.map((post, index) => (
+          <div class={`scroll-animation ${index % 3 === 0 ? 'left' : index % 3 === 1 ? 'right' : 'bottom'} scale`} style={{ '--stagger-index': index + 1 }}>
+            <BlogCard
+              title={post.title}
+              excerpt={post.excerpt}
+              date={post.date}
+              category={post.category}
+              tags={post.tags}
+              author={post.author}
+              slug={post.slug}
+            />
+          </div>
+        ))}
       </div>
     </div>
   </section>

@@ -62,21 +62,23 @@ const {
   <div class="geometric-shape square" style="top: 25%; left: 25%;" aria-hidden="true"></div>
 
   <!-- 导航栏 -->
-  <nav class="glass" role="navigation" aria-label="主要导航">
+  <nav class="nav-container" role="navigation" aria-label="主要导航">
     <div class="container">
       <div class="nav-content">
         <!-- 品牌Logo区域 -->
         <div class="nav-logo" role="log">
-          <div class="logo-wrapper">
-            <span class="material-symbols-outlined logo-icon" aria-hidden="true">dashboard</span>
-            <h1 class="logo-text">{title}</h1>
-          </div>
+          <a href="/" class="nav-logo-link" aria-label="返回首页">
+            <div class="logo-wrapper">
+              <span class="material-symbols-outlined logo-icon" aria-hidden="true">dashboard</span>
+              <h1 class="logo-text">{title}</h1>
+            </div>
+          </a>
         </div>
         
         <!-- 桌面导航菜单 -->
         <ul class="nav-menu">
           {siteConfig.navMenu.map((item) => (
-            <li>
+            <li class="nav-menu-item">
               <a 
                 href={item.href} 
                 aria-label={item.ariaLabel}
@@ -84,35 +86,62 @@ const {
               >
                 <span class="material-symbols-outlined nav-icon" aria-hidden="true">{item.icon}</span>
                 <span class="nav-link-text">{item.name}</span>
+                <!-- 导航链接下划线 -->
+                <span class="nav-link-underline"></span>
               </a>
             </li>
           ))}
+          
+          <!-- 归档和分类导航 -->
+          <li class="nav-menu-item">
+            <a 
+              href="/blog/" 
+              aria-label="博客归档"
+              class="nav-link"
+            >
+              <span class="material-symbols-outlined nav-icon" aria-hidden="true">archive</span>
+              <span class="nav-link-text">归档</span>
+              <span class="nav-link-underline"></span>
+            </a>
+          </li>
+          
+          <li class="nav-menu-item">
+            <a 
+              href="/categories/" 
+              aria-label="文章分类"
+              class="nav-link"
+            >
+              <span class="material-symbols-outlined nav-icon" aria-hidden="true">category</span>
+              <span class="nav-link-text">分类</span>
+              <span class="nav-link-underline"></span>
+            </a>
+          </li>
         </ul>
         
         <!-- 导航功能按钮容器 -->
         <div class="nav-actions">
           <!-- 搜索按钮 -->
-          <button class="btn-icon ripple" aria-label="搜索">
+          <button class="nav-btn btn-icon ripple" aria-label="搜索">
             <span class="material-symbols-outlined" aria-hidden="true">search</span>
           </button>
           
           <!-- 主题切换按钮 -->
-          <button class="theme-toggle-btn ripple btn-icon" aria-label="切换主题">
+          <button class="theme-toggle-btn nav-btn btn-icon ripple" aria-label="切换主题">
             <span class="material-symbols-outlined" aria-hidden="true">light_mode</span>
           </button>
           
           <!-- 背景蒙板控制按钮 -->
-          <button class="mask-toggle-btn ripple btn-icon" id="mask-toggle-btn" aria-label="切换背景蒙板">
+          <button class="mask-toggle-btn nav-btn btn-icon ripple" id="mask-toggle-btn" aria-label="切换背景蒙板">
             <span class="material-symbols-outlined" aria-hidden="true">visibility</span>
           </button>
           
           <!-- 音乐播放器按钮 -->
-          <button class="music-player-btn ripple btn-icon" id="music-player-btn" aria-label="打开音乐播放器">
+          <button class="music-player-btn nav-btn btn-icon ripple" id="music-player-btn" aria-label="打开音乐播放器">
             <span class="material-symbols-outlined" aria-hidden="true">music_note</span>
           </button>
           
           <!-- 移动端菜单按钮 -->
-          <button class="mobile-menu-btn ripple btn-icon" aria-expanded="false" aria-controls="mobile-nav-menu" aria-label="打开菜单">
+          <button class="mobile-menu-btn nav-btn btn-icon ripple" aria-expanded="false" aria-controls="mobile-nav-menu" aria-label="打开菜单">
             <span class="material-symbols-outlined" aria-hidden="true">menu</span>
           </button>
         </div>
@@ -128,27 +157,31 @@ const {
             <h1 class="logo-text">{title}</h1>
           </div>
         </div>
-        <button class="mobile-close-btn ripple btn-icon" aria-label="关闭菜单">
+        <button class="mobile-close-btn nav-btn btn-icon ripple" aria-label="关闭菜单">
           <span class="material-symbols-outlined" aria-hidden="true">close</span>
         </button>
       </div>
       
       <!-- 移动端搜索框 -->
       <div class="mobile-nav-search">
-        <form>
+        <form class="mobile-search-form">
           <span class="material-symbols-outlined search-icon" aria-hidden="true">search</span>
           <input 
             type="search" 
             placeholder="搜索文章..."
             aria-label="搜索文章"
+            class="mobile-search-input"
           />
+          <button type="submit" class="mobile-search-btn" aria-label="提交搜索">
+            <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span>
+          </button>
         </form>
       </div>
       
       <!-- 移动端导航菜单 -->
       <ul class="mobile-nav-items">
         {siteConfig.navMenu.map((item) => (
-          <li>
+          <li class="mobile-nav-item">
             <a 
               href={item.href} 
               aria-label={item.ariaLabel}
@@ -159,19 +192,53 @@ const {
             </a>
           </li>
         ))}
+        
+        <!-- 移动端归档和分类导航 -->
+        <li class="mobile-nav-item">
+          <a 
+            href="/blog/" 
+            aria-label="博客归档"
+            class="mobile-nav-link"
+          >
+            <span class="material-symbols-outlined nav-icon" aria-hidden="true">archive</span>
+            <span class="nav-link-text">归档</span>
+          </a>
+        </li>
+        
+        <li class="mobile-nav-item">
+          <a 
+            href="/categories/" 
+            aria-label="文章分类"
+            class="mobile-nav-link"
+          >
+            <span class="material-symbols-outlined nav-icon" aria-hidden="true">category</span>
+            <span class="nav-link-text">分类</span>
+          </a>
+        </li>
+        
+        <li class="mobile-nav-item">
+          <a 
+            href="/tags/" 
+            aria-label="文章标签"
+            class="mobile-nav-link"
+          >
+            <span class="material-symbols-outlined nav-icon" aria-hidden="true">label</span>
+            <span class="nav-link-text">标签</span>
+          </a>
+        </li>
       </ul>
       
       <!-- 移动端功能按钮 -->
       <div class="mobile-nav-actions">
-        <button class="btn-icon ripple" aria-label="切换主题">
+        <button class="mobile-nav-action-btn btn-icon ripple" aria-label="切换主题">
           <span class="material-symbols-outlined" aria-hidden="true">light_mode</span>
           <span class="action-text">切换主题</span>
         </button>
-        <button class="btn-icon ripple" aria-label="打开音乐播放器">
+        <button class="mobile-nav-action-btn btn-icon ripple" aria-label="打开音乐播放器">
           <span class="material-symbols-outlined" aria-hidden="true">music_note</span>
           <span class="action-text">音乐播放器</span>
         </button>
-        <button class="btn-icon ripple" aria-label="切换背景蒙板">
+        <button class="mobile-nav-action-btn btn-icon ripple" aria-label="切换背景蒙板">
           <span class="material-symbols-outlined" aria-hidden="true">visibility</span>
           <span class="action-text">背景蒙板</span>
         </button>
